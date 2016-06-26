@@ -58,11 +58,21 @@ ac_tlm_bus::~ac_tlm_bus()
 /// This is the transport method. Everything should go through this file.
 /// To connect more components, you will need to have an if/then/else or a switch
 /// statement inside this method. Notice that ac_tlm_req has an address field.
-ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request) 
+//removed const from input as we need alter address - JD
+ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request)
 {
     ac_tlm_rsp response;
-    
-    response = MEM_port->transport(request);
+    ac_tlm_req req = request;
+	if(request.addr >= 0x80020000 && request.addr <= 0x8003d3fd)
+	{
+		req.addr = request.addr - 0x80020000;
+	    response = MEM_port->transport(req);
+  	}
+  	else
+  	{
+  		cerr<<"Error: Trying to access an address that is out of memory"<<endl;
+  	}
+
 
     return response;
 }

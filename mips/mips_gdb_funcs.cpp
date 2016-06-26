@@ -68,10 +68,10 @@ void mips::reg_write( int reg, ac_word value ) {
 
 
 unsigned char mips::mem_read( unsigned int address ) {
-  return INST_PORT->read_byte( address );
+  return IM->read_byte( address );
 }
 
 
 void mips::mem_write( unsigned int address, unsigned char byte ) {
-  INST_PORT->write_byte( address, byte );
+  IM->write_byte( address, byte );
 }

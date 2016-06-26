@@ -16,7 +16,7 @@ export LIB_DIR := -L. `pkg-config --libs systemc`  \
 
 export LIB_SYSTEMC := `pkg-config --libs systemc`
 export LIB_ARCHC := `pkg-config --libs archc`
-export LIBS := $(LIB_SYSTEMC) $(LIB_DIR) $(LIB_ARCHC) 
+export LIBS := $(LIB_SYSTEMC) $(LIB_DIR) $(LIB_ARCHC)
 export OTHER := -std=c++11  -DAC_GUEST_BIG_ENDIAN  -Wno-deprecated
 
 export CFLAGS:=-g $(OTHER)

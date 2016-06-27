@@ -62,18 +62,7 @@ ac_tlm_bus::~ac_tlm_bus()
 ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request)
 {
     ac_tlm_rsp response;
-    ac_tlm_req req = request;
-	if(request.addr >= 0x80020000 && request.addr <= 0x8003d3fd)
-	{
-		req.addr = request.addr - 0x80020000;
-	    response = MEM_port->transport(req);
-  	}
-  	else
-  	{
-  		cerr<<"Error: Trying to access an address that is out of memory"<<endl;
-  	}
-
-
+    response = MEM_port->transport(request);
     return response;
 }
 

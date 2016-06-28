@@ -36,10 +36,12 @@ public:
   //!Storage Devices.
   ac_memport<mips_parms::ac_word, mips_parms::ac_Hword>& DM;
   ac_regbank<32, mips_parms::ac_word, mips_parms::ac_Dword>& RB;
+  ac_regbank<32, mips_parms::ac_word, mips_parms::ac_Dword>& RBF;
   ac_reg<mips_parms::ac_word>& npc;
   ac_reg<mips_parms::ac_word>& hi;
   ac_reg<mips_parms::ac_word>& lo;
   ac_reg<mips_parms::ac_word>& id;
+  ac_reg<mips_parms::ac_word>& cc;
 
   //!Constructor.
    mips_arch_ref(mips_arch& arch);

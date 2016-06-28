@@ -19,13 +19,15 @@
 mips_arch::mips_arch() :
   ac_arch_dec_if<mips_parms::ac_word, mips_parms::ac_Hword>(mips_parms::AC_MAX_BUFFER),
   ac_pc("ac_pc", 0),
-  DM("DM", 5242880U),
+  DM("DM", 536870912U),
   DM_mport(*this, DM),
   RB("RB"),
+  RBF("RBF"),
   npc("npc", 0),
   hi("hi", 0),
   lo("lo", 0),
-  id("id", 0) {
+  id("id", 0),
+  cc("cc", 0) {
 
   ac_mt_endian = mips_parms::AC_MATCH_ENDIAN;
   ac_tgt_endian = mips_parms::AC_PROC_ENDIAN;

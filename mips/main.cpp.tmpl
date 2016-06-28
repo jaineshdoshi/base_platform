@@ -16,7 +16,7 @@
 const char *project_name="mips";
 const char *project_file="mips.ac";
 const char *archc_version="2.4.1";
-const char *archc_options="";
+const char *archc_options="-abi ";
 
 #include  <iostream>
 #include  <systemc.h>

@@ -44,6 +44,9 @@ public:
   mips_syscall syscall;
   int cur_instr_id;
 
+
+    #include "mips_isa_helper.H"
+  
   //!Constructor.
   mips_isa(mips_arch& ref) : mips_arch_ref(ref) , syscall(ref) {
     //!Building Decoder.
@@ -65,6 +68,7 @@ public:
   inline __attribute__((always_inline)) void _behavior_mips_Type_R(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
   inline __attribute__((always_inline)) void _behavior_mips_Type_I(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
   inline __attribute__((always_inline)) void _behavior_mips_Type_J(uint8_t op, uint32_t addr);
+  inline __attribute__((always_inline)) void _behavior_mips_Type_S(uint8_t op, uint32_t code, uint8_t func);
 
   inline __attribute__((always_inline)) void behavior_lb(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
   inline __attribute__((always_inline)) void behavior_lbu(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
@@ -123,8 +127,87 @@ public:
   inline __attribute__((always_inline)) void behavior_bgez(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
   inline __attribute__((always_inline)) void behavior_bltzal(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
   inline __attribute__((always_inline)) void behavior_bgezal(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
-  inline __attribute__((always_inline)) void behavior_sys_call(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
   inline __attribute__((always_inline)) void behavior_instr_break(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_sys_call(uint8_t op, uint32_t code, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_sync(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_teq(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_ll(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
+  inline __attribute__((always_inline)) void behavior_sc(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
+  inline __attribute__((always_inline)) void behavior_movz(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movn(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_mul(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_clz(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_seb(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_seh(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_ext(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_rotr(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_rotrv(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_absd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_abss(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_addd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_adds(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_ceqd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_ceqs(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_coled(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_coles(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_coltd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_colts(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_cueqd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_cueqs(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_culed(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_cules(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_cultd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_cults(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_cund(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_cuns(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_cvtsd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_cvtds(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_cvtdw(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_cvtsw(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_divd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_divs(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_mfc1(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movs(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_muld(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_muls(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_mtc1(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_negd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_negs(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_subd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_subs(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_truncwd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_truncws(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_bc1tl(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
+  inline __attribute__((always_inline)) void behavior_bc1t(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
+  inline __attribute__((always_inline)) void behavior_bc1f(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
+  inline __attribute__((always_inline)) void behavior_bc1fl(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
+  inline __attribute__((always_inline)) void behavior_sdc1(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
+  inline __attribute__((always_inline)) void behavior_ldc1(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
+  inline __attribute__((always_inline)) void behavior_swc1(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
+  inline __attribute__((always_inline)) void behavior_lwc1(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
+  inline __attribute__((always_inline)) void behavior_sqrtd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_sqrts(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movf(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movt(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_maddd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_msubd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movzd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movnd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movtd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movfd(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_madds(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_msubs(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movns(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movts(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movfs(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_movzs(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_mfhc1(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_mthc1(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_ldxc1(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_sdxc1(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_lwxc1(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_swxc1(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
 
 };
 };

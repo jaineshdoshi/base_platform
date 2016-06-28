@@ -21,17 +21,17 @@
 namespace mips_parms {
 
 
-static const unsigned int AC_DEC_FIELD_NUMBER = 13; 	 //!< Number of Fields used by decoder.
-static const unsigned int AC_DEC_INSTR_NUMBER = 59; 	 //!< Number of Instructions declared.
-static const unsigned int AC_DEC_FORMAT_NUMBER = 3; 	 //!< Number of Formats declared.
-static const unsigned int AC_DEC_LIST_NUMBER = 96; 	 //!< Number of decodification lists used by decoder.
+static const unsigned int AC_DEC_FIELD_NUMBER = 16; 	 //!< Number of Fields used by decoder.
+static const unsigned int AC_DEC_INSTR_NUMBER = 138; 	 //!< Number of Instructions declared.
+static const unsigned int AC_DEC_FORMAT_NUMBER = 4; 	 //!< Number of Formats declared.
+static const unsigned int AC_DEC_LIST_NUMBER = 359; 	 //!< Number of decodification lists used by decoder.
 static const unsigned int AC_MAX_BUFFER = 4; 	 //!< This is the size needed by decoder buffer. It is equal to the biggest instruction size.
 static const unsigned int AC_WORDSIZE = 32; 	 //!< Architecture wordsize in bits.
 static const unsigned int AC_FETCHSIZE = 32; 	 //!< Architecture fetchsize in bits.
 static const unsigned int AC_MATCH_ENDIAN = 0; 	 //!< If the simulated arch match the endian with host.
 static const unsigned int AC_PROC_ENDIAN = 1; 	 //!< The simulated arch is big endian?
-static const unsigned int AC_RAMSIZE = 5242880U; 	 //!< Architecture RAM size in bytes (storage DM).
-static const unsigned int AC_RAM_END = 5242880U; 	 //!< Architecture end of RAM (storage DM).
+static const unsigned int AC_RAMSIZE = 536870912U; 	 //!< Architecture RAM size in bytes (storage DM).
+static const unsigned int AC_RAM_END = 536870912U; 	 //!< Architecture end of RAM (storage DM).
 
 
 //!Word type definitions.

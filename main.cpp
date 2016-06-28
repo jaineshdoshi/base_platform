@@ -42,6 +42,7 @@ int sc_main(int ac, char *av[])
   bus.MEM_port(mem.target_export);
 
   mips_proc1.init(ac, av);
+  mips_proc1.set_prog_args();
   cerr << endl;
 
   sc_start();

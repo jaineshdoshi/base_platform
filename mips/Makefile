@@ -13,7 +13,7 @@
 # ####################################################
 
 
-INC_DIR := -I. `pkg-config --cflags systemc` `pkg-config --cflags archc` 
+INC_DIR := -I. `pkg-config --cflags systemc` `pkg-config --cflags archc` `pkg-config --cflags tlm`
 LIB_DIR := -L. `pkg-config --libs systemc` -L/home/jaineshdoshi/Documents/ArchC/ArchC/../acinstall/lib
 
 LIB_SYSTEMC := `pkg-config --libs systemc`
@@ -41,7 +41,7 @@ ACHEAD := $(TARGET)_parms.H $(TARGET)_arch.H $(TARGET)_arch_ref.H $(TARGET)_isa.
 
 # These are the library files provided by ArchC
 # They are stored in the archc/lib directory
-ACLIBFILES := ac_decoder_rt.o ac_module.o ac_storage.o ac_utils.o  ac_syscall.o 
+ACLIBFILES := ac_decoder_rt.o ac_module.o ac_storage.o ac_utils.o  ac_syscall.o ac_tlm_port.o 
 
 # These are the source files provided by the user + ArchC sources
 SRCS := main.cpp $(ACSRCS)  $(TARGET)_syscall.cpp
@@ -52,7 +52,7 @@ EXE := $(TARGET).x
 
 .SUFFIXES: .cc .cpp .o .x
 
-all:  $(TARGET)_syscall.H $(ACHEAD) $(EXE)
+all:  lib 
 
 $(EXE): $(OBJS)
 	$(CC) $(CFLAGS) $(INC_DIR) $(LIB_DIR) -o $@ $(OBJS) $(LIBS) 2>&1 | c++filt
@@ -64,6 +64,9 @@ main.cpp:
 # Copy from template if mips_syscall.H not exist
 mips_syscall.H:
 	cp mips_syscall.H.tmpl mips_syscall.H
+
+lib: mips.cpp $(OBJS)
+	ar r lib$(TARGET).a $(OBJS)
 
 .cpp.o:
 	$(CC) $(CFLAGS) $(INC_DIR) -c $<

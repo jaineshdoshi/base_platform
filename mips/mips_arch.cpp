@@ -19,7 +19,7 @@
 mips_arch::mips_arch() :
   ac_arch_dec_if<mips_parms::ac_word, mips_parms::ac_Hword>(mips_parms::AC_MAX_BUFFER),
   ac_pc("ac_pc", 0),
-  DM("DM", 5242880U),
+  DM("DM", 536870912U),
   DM_mport(*this, DM),
   RB("RB"),
   RBF("RBF"),

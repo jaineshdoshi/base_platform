@@ -1,0 +1,43 @@
+
+sw/hello_world.mips:     file format elf32-big
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00006f1c  00000100  00000100  00000100  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .reginfo      00000018  00400000  00400000  00007880  2**2
+                  CONTENTS, READONLY
+  2 .rodata       00000020  0000701c  0000701c  0000701c  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .data         00000830  00008040  00008040  00007040  2**3
+                  CONTENTS, ALLOC, LOAD, DATA
+  4 .sdata        00000010  00008870  00008870  00007870  2**2
+                  CONTENTS, ALLOC, LOAD, DATA
+  5 .sbss         0000001c  00008880  00008880  00007880  2**2
+                  ALLOC
+  6 .bss          00000028  0000889c  0000889c  00007880  2**2
+                  ALLOC
+  7 .comment      00000021  00000000  00000000  00007898  2**0
+                  CONTENTS, READONLY
+  8 .pdr          00000c00  00000000  00000000  000078bc  2**2
+                  CONTENTS, READONLY
+  9 .debug_aranges 00000040  00000000  00000000  000084bc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_info   00000d68  00000000  00000000  000084fc  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_abbrev 000001c6  00000000  00000000  00009264  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_line   00000215  00000000  00000000  0000942a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 13 .debug_frame  000003b0  00000000  00000000  00009640  2**2
+                  CONTENTS, READONLY, DEBUGGING
+ 14 .debug_str    00000340  00000000  00000000  000099f0  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 15 .debug_loc    000006a9  00000000  00000000  00009d30  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 16 .debug_ranges 00000178  00000000  00000000  0000a3d9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 17 .gnu.attributes 00000010  00000000  00000000  0000a551  2**0
+                  CONTENTS, READONLY
+ 18 .mdebug.abi32 00000000  000088c4  000088c4  0000a561  2**0
+                  CONTENTS, READONLY

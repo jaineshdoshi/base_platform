@@ -62,19 +62,16 @@ ac_tlm_bus::~ac_tlm_bus()
 ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request)
 {
     ac_tlm_rsp response;
-	if(request.addr >= 0x80020000 && request.addr <= 0x80053600 )
-	{
-		ac_tlm_req req = request;
-		req.addr = request.addr - 0x80020000; 
-	    response = MEM_port->transport(req);
-	    return response;
-    }
-    else
-    {
-		cerr<<"Error:trying to access address outside of memory"<<endl;
-    }
+    //if(request.addr >= 0x80020000 && request.addr <= 0x80053600 )
+    //{
+    //    ac_tlm_req req = request;
+    //    req.addr = request.addr - 0x80020000; 
+    //    response = MEM_port->transport(req);
+        response = MEM_port->transport(request);
+        return response;
+    //}
+    //else
+    //{
+    //    cerr<<"\n Error:trying to access address outside of memory"<<endl;
+    //}
 }
-
-
-
-

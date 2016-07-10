@@ -23,6 +23,9 @@ void* mips::dispatch() {
   if (ac_qk.need_sync()) {
     ac_qk.sync();
   }
+  //debug @JD
+  if( ac_pc > 0x800200bc)
+    ac_pc = ac_pc - 0x800200bc;
   if( ac_pc >= dec_cache_size){
     cerr << "ArchC: Address out of bounds (pc=0x" << hex << ac_pc << ")." << endl;
     stop();
@@ -1139,6 +1142,8 @@ void mips::init(int ac, char *av[]) {
   set_queue(av[0]);
 #endif
 
+  //debug @JD
+  ac_start_addr = 0xbc;
   ac_pc = ac_start_addr;
   ISA._behavior_begin();
   cerr << endl << "ArchC: -------------------- Starting Simulation --------------------" << endl;

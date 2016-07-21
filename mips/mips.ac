@@ -25,6 +25,8 @@ AC_ARCH(mips){
   ac_tlm_port DM:512M;
   ac_regbank RB:32;
   ac_regbank RBF:32;
+  //added @JD coprocessor0 register bank 
+  ac_regbank CRB:32;
   ac_reg npc;
   ac_reg hi, lo;
   ac_reg id;

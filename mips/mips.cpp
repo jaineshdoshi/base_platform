@@ -23,9 +23,10 @@ void* mips::dispatch() {
   if (ac_qk.need_sync()) {
     ac_qk.sync();
   }
-  //debug @JD
-  if( ac_pc > 0x800200bc)
-    ac_pc = ac_pc - 0x800200bc;
+  if(ac_pc > 0x80020000)
+  {
+    ac_pc = ac_pc - 0x80020000;
+  }
   if( ac_pc >= dec_cache_size){
     cerr << "ArchC: Address out of bounds (pc=0x" << hex << ac_pc << ")." << endl;
     stop();
@@ -65,6 +66,14 @@ void* mips::dispatch() {
         instr_dec->F_Type_S.op = ins_cache[1];
         instr_dec->F_Type_S.code = ins_cache[9];
         instr_dec->F_Type_S.func = ins_cache[6];
+      break;
+      case 5:
+        instr_dec->F_Type_C.op = ins_cache[1];
+        instr_dec->F_Type_C.rs = ins_cache[2];
+        instr_dec->F_Type_C.rt = ins_cache[3];
+        instr_dec->F_Type_C.rd = ins_cache[4];
+        instr_dec->F_Type_C.constant = ins_cache[10];
+        instr_dec->F_Type_C.sel = ins_cache[11];
       break;
       default:
         cerr << "ArchC Error: Unidentified instruction. " << endl;
@@ -108,7 +117,8 @@ void mips::behavior() {
               &&I_movt, &&I_maddd, &&I_msubd, &&I_movzd, &&I_movnd, 
               &&I_movtd, &&I_movfd, &&I_madds, &&I_msubs, &&I_movns, 
               &&I_movts, &&I_movfs, &&I_movzs, &&I_mfhc1, &&I_mthc1, 
-              &&I_ldxc1, &&I_sdxc1, &&I_lwxc1, &&I_swxc1};
+              &&I_ldxc1, &&I_sdxc1, &&I_lwxc1, &&I_swxc1, &&I_mfc0, 
+              &&I_mtc0};
 
   IntRoutine = vet;
 
@@ -1107,6 +1117,20 @@ void mips::behavior() {
     ac_qk.inc(time_1cycle);
     goto *dispatch();
 
+  I_mfc0: // Instruction mfc0
+    ISA._behavior_instruction(instr_dec->F_Type_C.op);
+    ISA._behavior_mips_Type_C(instr_dec->F_Type_C.op, instr_dec->F_Type_C.rs, instr_dec->F_Type_C.rt, instr_dec->F_Type_C.rd, instr_dec->F_Type_C.constant, instr_dec->F_Type_C.sel);
+    ISA.behavior_mfc0(instr_dec->F_Type_C.op, instr_dec->F_Type_C.rs, instr_dec->F_Type_C.rt, instr_dec->F_Type_C.rd, instr_dec->F_Type_C.constant, instr_dec->F_Type_C.sel);
+    ac_qk.inc(time_1cycle);
+    goto *dispatch();
+
+  I_mtc0: // Instruction mtc0
+    ISA._behavior_instruction(instr_dec->F_Type_C.op);
+    ISA._behavior_mips_Type_C(instr_dec->F_Type_C.op, instr_dec->F_Type_C.rs, instr_dec->F_Type_C.rt, instr_dec->F_Type_C.rd, instr_dec->F_Type_C.constant, instr_dec->F_Type_C.sel);
+    ISA.behavior_mtc0(instr_dec->F_Type_C.op, instr_dec->F_Type_C.rs, instr_dec->F_Type_C.rt, instr_dec->F_Type_C.rd, instr_dec->F_Type_C.constant, instr_dec->F_Type_C.sel);
+    ac_qk.inc(time_1cycle);
+    goto *dispatch();
+
 } // behavior()
 
 #include <ac_sighandlers.H>
@@ -1117,6 +1141,8 @@ void mips::init() {
   set_queue(av[0]);
 #endif
 
+  // debug @JD
+  ac_start_addr = 0xbc;
   ac_pc = ac_start_addr;
   ISA._behavior_begin();
   cerr << endl << "ArchC: -------------------- Starting Simulation --------------------" << endl;
@@ -1142,7 +1168,7 @@ void mips::init(int ac, char *av[]) {
   set_queue(av[0]);
 #endif
 
-  //debug @JD
+  // debug @JD
   ac_start_addr = 0xbc;
   ac_pc = ac_start_addr;
   ISA._behavior_begin();

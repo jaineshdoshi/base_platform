@@ -11,7 +11,7 @@
  * IC-UNICAMP                                         *
  * http://www.lsc.ic.unicamp.br                       *
  ******************************************************/
- 
+
 // Rodolfo editou aqui
 //
 const char *project_name="mips";
@@ -27,37 +27,37 @@ const char *archc_options="-abi -dy ";
 int sc_main(int ac, char *av[])
 {
 
-  //!  ISA simulator
-  mips mips_proc1("mips");
-  //! Bus
-  ac_tlm_bus bus("bus");
-  // Memory
-  ac_tlm_mem mem("mem");
+    //!  ISA simulator
+    mips mips_proc1("mips");
+    //! Bus
+    ac_tlm_bus bus("bus");
+    // Memory
+    ac_tlm_mem mem("mem");
 
 #ifdef AC_DEBUG
-  ac_trace("mips1_proc1.trace");
-#endif 
+    ac_trace("mips1_proc1.trace");
+#endif
 
-  mips_proc1.DM(bus.target_export);
-  bus.MEM_port(mem.target_export);
+    mips_proc1.DM(bus.target_export);
+    bus.MEM_port(mem.target_export);
 
-  mips_proc1.init(ac, av);
-  mips_proc1.set_prog_args();
-  cerr << endl;
+    mips_proc1.init(ac, av);
+    mips_proc1.set_prog_args();
+    cerr << endl;
 
-  sc_start();
+    sc_start();
 
-  mips_proc1.PrintStat();
-  cerr << endl;
+    mips_proc1.PrintStat();
+    cerr << endl;
 
 #ifdef AC_STATS
-  mips1_proc1.ac_sim_stats.time = sc_simulation_time();
+    mips1_proc1.ac_sim_stats.time = sc_simulation_time();
   mips1_proc1.ac_sim_stats.print();
-#endif 
+#endif
 
 #ifdef AC_DEBUG
-  ac_close_trace();
-#endif 
+    ac_close_trace();
+#endif
 
-  return mips_proc1.ac_exit_status;
+    return mips_proc1.ac_exit_status;
 }

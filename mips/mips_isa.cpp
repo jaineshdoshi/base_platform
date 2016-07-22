@@ -35,6 +35,7 @@ void ac_behavior( Type_R ){}
 void ac_behavior( Type_I ){}
 void ac_behavior( Type_J ){}
 void ac_behavior( Type_S ){}
+void ac_behavior( Type_C ){}
 
 // Behavior called before starting simulation
 void ac_behavior(begin)
@@ -375,6 +376,13 @@ void ac_behavior( divs )
   dbg_printf("Result = %f\n", res);
 }
 
+void ac_behavior( mfc0 )
+{
+  dbg_printf("mfc0 r%d, cp0r%d\n", rt, rd);
+  RB[rt] = CRB[rd];
+  dbg_printf("Result = 0x%X\n", RB[rt]);
+}
+
 void ac_behavior( mfc1 )
 {
   dbg_printf("mfc1 %%%d, %%f%d\n", rt, rd);
@@ -405,7 +413,7 @@ void ac_behavior( muld )
   save_double(res, shamt);
   dbg_printf("Result = %lf\n", res);
 }
-
+  
 void ac_behavior( muls )
 {
   dbg_printf("mul.s %%f%d, %%f%d, %%f%d\n", shamt, rd, rt);
@@ -414,10 +422,18 @@ void ac_behavior( muls )
   dbg_printf("Result = %f\n", res);
 }
 
+void ac_behavior( mtc0 )
+{
+  dbg_printf("mtc0 r%d, cp0r%d\n", rt, rd);
+  CRB[rd] = RB[rt];
+  dbg_printf("Result = 0x%X\n", CRB[rd]);
+}
+
 void ac_behavior( mtc1 )
 {
   dbg_printf("mtc1 %%%d, %%f%d\n", rt, rd);
   RBF[rd] = RB[rt];
+  dbg_printf("Result = %f\n", (float)RBF[rd]);
 }
 
 void ac_behavior( negd )
@@ -955,6 +971,17 @@ void ac_behavior( jalr )
   dbg_printf("Return = %#x\n", ac_pc+4);
 }
 
+void ac_behavior( b )
+{
+  dbg_printf("b %d\n",imm & 0xFFFF);
+  if( RB[0] == RB[0] ){
+#ifndef NO_NEED_PC_UPDATE
+    npc = ac_pc + (imm<<2);
+#endif
+    dbg_printf("Taken to %#x\n", ac_pc + (imm<<2));
+  }
+}
+
 void ac_behavior( beq )
 {
   dbg_printf("beq r%d, r%d, %d\n", rt, rs, imm & 0xFFFF);
@@ -1307,4 +1334,15 @@ void ac_behavior( msubs )
   float res = load_float(rd) * load_float(rt) - load_float(rs);
   save_float(res, shamt);
   dbg_printf("Result = %f\n", res);
+}
+
+
+void ac_behavior( eret )
+{
+  dbg_printf("eret");
+  #ifndef NO_NEED_PC_UPDATE
+    npc = CRB[14];
+  #endif
+  ///set EXL bit of CRB's Status register to 0
+  dbg_printf("Result = %#x\n", CRB[14]);
 }

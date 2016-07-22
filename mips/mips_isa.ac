@@ -19,6 +19,7 @@ AC_ISA(mips){
   ac_format Type_I  = "%op:6 %rs:5 %rt:5 %imm:16:s";
   ac_format Type_J  = "%op:6 %addr:26";
   ac_format Type_S  = "%op:6 %code:20 %func:6";
+  ac_format Type_C  = "%op:6 %rs:5 %rt:5 %rd:5 %constant:8 %sel:3";
 
   // mips-I
   ac_instr<Type_I> lb, lbu, lh, lhu, lw, lwl, lwr;
@@ -31,9 +32,9 @@ AC_ISA(mips){
   ac_instr<Type_R> mfhi, mthi, mflo, mtlo;
   ac_instr<Type_J> j, jal;
   ac_instr<Type_R> jr, jalr;
-  ac_instr<Type_I> beq, bne, blez, bgtz, bltz, bgez, bltzal, bgezal;
+  ac_instr<Type_I> b, beq, bne, blez, bgtz, bltz, bgez, bltzal, bgezal;
   ac_instr<Type_R> instr_break;
-  ac_instr<Type_S> sys_call;
+  ac_instr<Type_S> sys_call, eret;
 
   // mips-II
   ac_instr<Type_R> sync, teq;
@@ -65,6 +66,7 @@ AC_ISA(mips){
 
   // FPU instructions - mips32r2
   ac_instr<Type_R> mfhc1, mthc1, ldxc1, sdxc1, lwxc1, swxc1;
+  ac_instr<Type_C> mfc0, mtc0;
 
   // gas MIPS specific register names
   ac_asm_map reg {
@@ -83,7 +85,12 @@ AC_ISA(mips){
      "$f"[0..31] = [0..31];
   }
 
-  ISA_CTOR(mips){
+  // Coprocessor0 register names
+  ac_asm_map creg {
+     "$k"[0..31] = [0..31];
+  }
+
+    ISA_CTOR(mips){
     lb.set_asm("lb %reg, \%lo(%exp)(%reg)", rt, imm, rs);
     lb.set_asm("lb %reg, (%reg)", rt, rs, imm=0);
     lb.set_asm("lb %reg, %imm (%reg)", rt, imm, rs);
@@ -296,6 +303,9 @@ AC_ISA(mips){
     jalr.set_asm("jal  %reg", rs, rd="$ra"); // gas
     jalr.set_decoder(op=0x00, func= 0x09);
 
+    b.set_asm("b %exp(pcrel)", imm);
+    b.set_decoder(op=0x04, rs=0x00, rt=0x00);
+
     beq.set_asm("beq %reg, %reg, %exp(pcrel)", rs, rt, imm);
     beq.set_asm("b %exp(pcrel)", imm, rs=0, rt=0);        // gas
     beq.set_asm("beqz %reg, %exp(pcrel)", rs, imm, rt=0); // gas
@@ -467,6 +477,9 @@ AC_ISA(mips){
     divs.set_asm("div.s %freg, %freg, %freg", shamt, rd, rt);
     divs.set_decoder(op=0x11, rs=16, func=0x03);
 
+    mfc0.set_asm("mfc0 %reg, %creg, %imm", rt, rd, sel);
+    mfc0.set_decoder(op=0x10, rs=0, constant=0x00);
+
     mfc1.set_asm("mfc1 %reg, %freg", rt, rd);
     mfc1.set_decoder(op=0x11, rs=0x00, shamt=0x0, func=0x0);
 
@@ -481,6 +494,10 @@ AC_ISA(mips){
 
     muls.set_asm("mul.s %freg, %freg, %freg", shamt, rd, rt);
     muls.set_decoder(op=0x11, rs=16, func=0x02);
+
+    mtc0.set_asm("mtc0 %reg, %freg", rt, rd);
+    mtc0.set_asm("mtc0 %reg, %freg %imm", rt, rd, sel);
+    mtc0.set_decoder(op=0x10, rs=0x4, constant=0x00);
 
     mtc1.set_asm("mtc1 %reg, %freg", rt, rd);
     mtc1.set_decoder(op=0x11, rs=0x4, shamt=0x0, func=0x0);
@@ -568,6 +585,10 @@ AC_ISA(mips){
 
     swxc1.set_asm("swxc1 %freg, %reg (%reg)", rd, rt, rs);
     swxc1.set_decoder(op=0x13, shamt=0, func=0x08);
+
+    eret.set_asm("eret %imm", code);
+    eret.set_decoder(op=0x10, func=0x18);
+
 
     pseudo_instr("li %reg, %imm") {
       "lui %0, \%hi(%1)";

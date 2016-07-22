@@ -23,9 +23,10 @@ void* mips::dispatch() {
   if (ac_qk.need_sync()) {
     ac_qk.sync();
   }
-  //debug @JD
-  if( ac_pc > 0x800200bc)
-    ac_pc = ac_pc - 0x800200bc;
+  if(ac_pc > 0x80020000)
+  {
+     ac_pc = ac_pc - 0x80020000;
+  }
   if( ac_pc >= dec_cache_size){
     cerr << "ArchC: Address out of bounds (pc=0x" << hex << ac_pc << ")." << endl;
     stop();
@@ -66,6 +67,14 @@ void* mips::dispatch() {
         instr_dec->F_Type_S.code = ins_cache[9];
         instr_dec->F_Type_S.func = ins_cache[6];
       break;
+      case 5:
+        instr_dec->F_Type_C.op = ins_cache[1];
+        instr_dec->F_Type_C.rs = ins_cache[2];
+        instr_dec->F_Type_C.rt = ins_cache[3];
+        instr_dec->F_Type_C.rd = ins_cache[4];
+        instr_dec->F_Type_C.constant = ins_cache[10];
+        instr_dec->F_Type_C.sel = ins_cache[11];
+      break;
       default:
         cerr << "ArchC Error: Unidentified instruction. " << endl;
         cerr << "PC = " << hex << ac_pc << dec << endl;
@@ -91,24 +100,25 @@ void mips::behavior() {
               &&I_sllv, &&I_srlv, &&I_srav, &&I_mult, &&I_multu, 
               &&I_div, &&I_divu, &&I_mfhi, &&I_mthi, &&I_mflo, 
               &&I_mtlo, &&I_j, &&I_jal, &&I_jr, &&I_jalr, 
-              &&I_beq, &&I_bne, &&I_blez, &&I_bgtz, &&I_bltz, 
-              &&I_bgez, &&I_bltzal, &&I_bgezal, &&I_instr_break, &&I_sys_call, 
-              &&I_sync, &&I_teq, &&I_ll, &&I_sc, &&I_movz, 
-              &&I_movn, &&I_mul, &&I_clz, &&I_seb, &&I_seh, 
-              &&I_ext, &&I_rotr, &&I_rotrv, &&I_absd, &&I_abss, 
-              &&I_addd, &&I_adds, &&I_ceqd, &&I_ceqs, &&I_coled, 
-              &&I_coles, &&I_coltd, &&I_colts, &&I_cueqd, &&I_cueqs, 
-              &&I_culed, &&I_cules, &&I_cultd, &&I_cults, &&I_cund, 
-              &&I_cuns, &&I_cvtsd, &&I_cvtds, &&I_cvtdw, &&I_cvtsw, 
-              &&I_divd, &&I_divs, &&I_mfc1, &&I_movd, &&I_movs, 
-              &&I_muld, &&I_muls, &&I_mtc1, &&I_negd, &&I_negs, 
-              &&I_subd, &&I_subs, &&I_truncwd, &&I_truncws, &&I_bc1tl, 
-              &&I_bc1t, &&I_bc1f, &&I_bc1fl, &&I_sdc1, &&I_ldc1, 
-              &&I_swc1, &&I_lwc1, &&I_sqrtd, &&I_sqrts, &&I_movf, 
-              &&I_movt, &&I_maddd, &&I_msubd, &&I_movzd, &&I_movnd, 
-              &&I_movtd, &&I_movfd, &&I_madds, &&I_msubs, &&I_movns, 
-              &&I_movts, &&I_movfs, &&I_movzs, &&I_mfhc1, &&I_mthc1, 
-              &&I_ldxc1, &&I_sdxc1, &&I_lwxc1, &&I_swxc1};
+              &&I_b, &&I_beq, &&I_bne, &&I_blez, &&I_bgtz, 
+              &&I_bltz, &&I_bgez, &&I_bltzal, &&I_bgezal, &&I_instr_break, 
+              &&I_sys_call, &&I_eret, &&I_sync, &&I_teq, &&I_ll, 
+              &&I_sc, &&I_movz, &&I_movn, &&I_mul, &&I_clz, 
+              &&I_seb, &&I_seh, &&I_ext, &&I_rotr, &&I_rotrv, 
+              &&I_absd, &&I_abss, &&I_addd, &&I_adds, &&I_ceqd, 
+              &&I_ceqs, &&I_coled, &&I_coles, &&I_coltd, &&I_colts, 
+              &&I_cueqd, &&I_cueqs, &&I_culed, &&I_cules, &&I_cultd, 
+              &&I_cults, &&I_cund, &&I_cuns, &&I_cvtsd, &&I_cvtds, 
+              &&I_cvtdw, &&I_cvtsw, &&I_divd, &&I_divs, &&I_mfc1, 
+              &&I_movd, &&I_movs, &&I_muld, &&I_muls, &&I_mtc1, 
+              &&I_negd, &&I_negs, &&I_subd, &&I_subs, &&I_truncwd, 
+              &&I_truncws, &&I_bc1tl, &&I_bc1t, &&I_bc1f, &&I_bc1fl, 
+              &&I_sdc1, &&I_ldc1, &&I_swc1, &&I_lwc1, &&I_sqrtd, 
+              &&I_sqrts, &&I_movf, &&I_movt, &&I_maddd, &&I_msubd, 
+              &&I_movzd, &&I_movnd, &&I_movtd, &&I_movfd, &&I_madds, 
+              &&I_msubs, &&I_movns, &&I_movts, &&I_movfs, &&I_movzs, 
+              &&I_mfhc1, &&I_mthc1, &&I_ldxc1, &&I_sdxc1, &&I_lwxc1, 
+              &&I_swxc1, &&I_mfc0, &&I_mtc0};
 
   IntRoutine = vet;
 
@@ -484,6 +494,13 @@ void mips::behavior() {
     ac_qk.inc(time_1cycle);
     goto *dispatch();
 
+  I_b: // Instruction b
+    ISA._behavior_instruction(instr_dec->F_Type_I.op);
+    ISA._behavior_mips_Type_I(instr_dec->F_Type_I.op, instr_dec->F_Type_I.rs, instr_dec->F_Type_I.rt, instr_dec->F_Type_I.imm);
+    ISA.behavior_b(instr_dec->F_Type_I.op, instr_dec->F_Type_I.rs, instr_dec->F_Type_I.rt, instr_dec->F_Type_I.imm);
+    ac_qk.inc(time_1cycle);
+    goto *dispatch();
+
   I_beq: // Instruction beq
     ISA._behavior_instruction(instr_dec->F_Type_I.op);
     ISA._behavior_mips_Type_I(instr_dec->F_Type_I.op, instr_dec->F_Type_I.rs, instr_dec->F_Type_I.rt, instr_dec->F_Type_I.imm);
@@ -551,6 +568,13 @@ void mips::behavior() {
     ISA._behavior_instruction(instr_dec->F_Type_S.op);
     ISA._behavior_mips_Type_S(instr_dec->F_Type_S.op, instr_dec->F_Type_S.code, instr_dec->F_Type_S.func);
     ISA.behavior_sys_call(instr_dec->F_Type_S.op, instr_dec->F_Type_S.code, instr_dec->F_Type_S.func);
+    ac_qk.inc(time_1cycle);
+    goto *dispatch();
+
+  I_eret: // Instruction eret
+    ISA._behavior_instruction(instr_dec->F_Type_S.op);
+    ISA._behavior_mips_Type_S(instr_dec->F_Type_S.op, instr_dec->F_Type_S.code, instr_dec->F_Type_S.func);
+    ISA.behavior_eret(instr_dec->F_Type_S.op, instr_dec->F_Type_S.code, instr_dec->F_Type_S.func);
     ac_qk.inc(time_1cycle);
     goto *dispatch();
 
@@ -1107,6 +1131,20 @@ void mips::behavior() {
     ac_qk.inc(time_1cycle);
     goto *dispatch();
 
+  I_mfc0: // Instruction mfc0
+    ISA._behavior_instruction(instr_dec->F_Type_C.op);
+    ISA._behavior_mips_Type_C(instr_dec->F_Type_C.op, instr_dec->F_Type_C.rs, instr_dec->F_Type_C.rt, instr_dec->F_Type_C.rd, instr_dec->F_Type_C.constant, instr_dec->F_Type_C.sel);
+    ISA.behavior_mfc0(instr_dec->F_Type_C.op, instr_dec->F_Type_C.rs, instr_dec->F_Type_C.rt, instr_dec->F_Type_C.rd, instr_dec->F_Type_C.constant, instr_dec->F_Type_C.sel);
+    ac_qk.inc(time_1cycle);
+    goto *dispatch();
+
+  I_mtc0: // Instruction mtc0
+    ISA._behavior_instruction(instr_dec->F_Type_C.op);
+    ISA._behavior_mips_Type_C(instr_dec->F_Type_C.op, instr_dec->F_Type_C.rs, instr_dec->F_Type_C.rt, instr_dec->F_Type_C.rd, instr_dec->F_Type_C.constant, instr_dec->F_Type_C.sel);
+    ISA.behavior_mtc0(instr_dec->F_Type_C.op, instr_dec->F_Type_C.rs, instr_dec->F_Type_C.rt, instr_dec->F_Type_C.rd, instr_dec->F_Type_C.constant, instr_dec->F_Type_C.sel);
+    ac_qk.inc(time_1cycle);
+    goto *dispatch();
+
 } // behavior()
 
 #include <ac_sighandlers.H>
@@ -1142,7 +1180,7 @@ void mips::init(int ac, char *av[]) {
   set_queue(av[0]);
 #endif
 
-  //debug @JD
+  // debug @JD
   ac_start_addr = 0xbc;
   ac_pc = ac_start_addr;
   ISA._behavior_begin();

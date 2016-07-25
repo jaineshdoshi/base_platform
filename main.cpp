@@ -23,9 +23,14 @@ const char *archc_options="-abi -dy ";
 #include "mips.H"
 #include "memory.h"
 #include "bus.h"
+#include "bus/bus.h"
+#include "memory/memory.h"
+#include "mips/mips.H"
 
 int sc_main(int ac, char *av[])
 {
+
+    sc_clock p_clock("p_clock", 4, SC_NS);
 
     //!  ISA simulator
     mips mips_proc1("mips");

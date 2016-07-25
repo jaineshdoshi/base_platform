@@ -1346,3 +1346,12 @@ void ac_behavior( eret )
   ///set EXL bit of CRB's Status register to 0
   dbg_printf("Result = %#x\n", CRB[14]);
 }
+
+void ac_behavior( deret )
+{
+    dbg_printf("deret");
+#ifndef NO_NEED_PC_UPDATE
+    npc = CRB[24];
+#endif
+    dbg_printf("Result = %#x\n", CRB[24]);
+}

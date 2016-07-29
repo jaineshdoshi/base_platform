@@ -32,11 +32,11 @@ all:
 	$(MAKE) $(EXE) 
 
 clean:
-	for c in $(COMPONENTS); do echo " => Making" $$c ...; \
+	for c in $(COMPONENTS); do echo " => Cleaning" $$c ...; \
 	    cd $$c; $(MAKE) clean; cd ..; done	
-	echo " => Making sw ..."
+	echo " => Cleaning sw ..."
 	cd sw ; $(MAKE) clean
-	echo " => Making platform ..."
+	echo " => Cleaning platform ..."
 	rm -f $(OBJS) $(EXE) *~ *.o
 
 #------------------------------------------------------

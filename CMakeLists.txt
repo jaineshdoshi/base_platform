@@ -20,4 +20,4 @@ endforeach()
 list(REMOVE_DUPLICATES Foo_INCLUDE_DIRS)
 
 include_directories(${Foo_INCLUDE_DIRS})
-add_executable(myrandomshit ${SOURCE_FILES} main.cpp)
+add_executable(eocs-mips-platfomr ${SOURCE_FILES} main.cpp)

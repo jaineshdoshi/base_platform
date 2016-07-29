@@ -62,7 +62,8 @@ ac_tlm_bus::~ac_tlm_bus()
 ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request)
 {
     ac_tlm_rsp response;
-//    if(request.addr >= 0x80020000 && request.addr <= 0x80053600 )
+
+//    MEMORY REQUEST
     if(request.addr >= 0x80020000)
     {
         ac_tlm_req req = request;

@@ -150,7 +150,7 @@ ac_tlm_rsp_status gptimer::gptimer_write(const uint32_t &a, const uint32_t &d){
     default:
       break;
   }
-  //Thanks QEMU team!
+
   id = (internal_address - TIMER_BASE) / TIMER_BASE;
   timer_addr = internal_address % TIMER_BASE;
 

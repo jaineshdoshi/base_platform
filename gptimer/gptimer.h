@@ -59,7 +59,8 @@
 typedef struct{
   int prescalar_value; //!< Prescalar Value Register
   unsigned int prescalar_reload; //!< Prescalar Reload Register
-}LEON3_prescalar_regs;
+}atlas_prescaler_regs;
+
 
 /**
  * \brief Timer Unit
@@ -92,7 +93,7 @@ private:
   inline void timer_tick();
 
   atlas_timers *timers;
-  LEON3_prescalar_regs prescalar;
+  atlas_prescaler_regs prescalar;
   uint32_t configuration_reg;
 
 public:

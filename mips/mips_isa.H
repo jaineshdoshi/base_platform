@@ -45,7 +45,7 @@ public:
   int cur_instr_id;
 
 
-    #include "mips_isa_helper.H"
+#include "mips_isa_helper.H"
   
   //!Constructor.
   mips_isa(mips_arch& ref) : mips_arch_ref(ref) , syscall(ref) {

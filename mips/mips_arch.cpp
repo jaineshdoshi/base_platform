@@ -23,7 +23,7 @@ mips_arch::mips_arch() :
   DM_mport(*this, DM),
   RB("RB"),
   RBF("RBF"),
-  CRB("CRB"),
+  C0_RB("C0_RB"),
   npc("npc", 0),
   hi("hi", 0),
   lo("lo", 0),

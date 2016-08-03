@@ -566,7 +566,7 @@ ac_dec_instr mips_parms::mips_isa::instructions[mips_parms::AC_DEC_INSTR_NUMBER]
   {"lwxc1", 4, "lwxc1", "lwxc1 %freg, %reg (%reg)", "Type_R", 140, 1, 1, 1, &(mips_parms::mips_isa::dec_list[360]), 0, &(mips_parms::mips_isa::instructions[140])},
   {"swxc1", 4, "swxc1", "swxc1 %freg, %reg (%reg)", "Type_R", 141, 1, 1, 1, &(mips_parms::mips_isa::dec_list[363]), 0, &(mips_parms::mips_isa::instructions[141])},
   {"mfc0", 4, "mfc0", "mfc0 %reg, %creg, %imm", "Type_C", 142, 1, 1, 1, &(mips_parms::mips_isa::dec_list[366]), 0, &(mips_parms::mips_isa::instructions[142])},
-  {"mtc0", 4, "mtc0", "mtc0 %reg, %freg", "Type_C", 143, 1, 1, 1, &(mips_parms::mips_isa::dec_list[369]), 0, NULL}
+  {"mtc0", 4, "mtc0", "mtc0 %reg, %creg %imm", "Type_C", 143, 1, 1, 1, &(mips_parms::mips_isa::dec_list[369]), 0, NULL}
 };
 
 const ac_instr_info

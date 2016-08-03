@@ -23,9 +23,7 @@ void* mips::dispatch() {
   if (ac_qk.need_sync()) {
     ac_qk.sync();
   }
-//	debug @JD
   if( ac_pc - 0x80020000 >= DM.get_size()){
-//  if( ac_pc >= DM.get_size()){
     cerr << "ArchC: Address out of bounds (pc=0x" << hex << ac_pc << ")." << endl;
     stop();
     longjmp(ac_env, AC_ACTION_STOP);
@@ -34,9 +32,7 @@ void* mips::dispatch() {
   unsigned ins_id;
   bool exec = true;
 
-//  debug @JD
-  if (ac_pc - 0x80020000 < 0x100) {
-//  if (ac_pc < 0x100) {
+  if (ac_pc < 0x100) {
     //!Handling System calls.
     switch( ac_pc ){
       #define AC_SYSC(NAME,LOCATION) \

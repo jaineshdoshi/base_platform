@@ -11,7 +11,7 @@
  * IC-UNICAMP                                         *
  * http://www.lsc.ic.unicamp.br                       *
  ******************************************************/
-
+ 
 // Rodolfo editou aqui
 //
 const char *project_name="mips";
@@ -19,65 +19,45 @@ const char *project_file="mips1.ac";
 const char *archc_version="2.0beta1";
 const char *archc_options="-abi -dy ";
 
-class gptimer;
-
-class gptimer;
-
 #include <systemc.h>
-#include "bus/bus.h"
-#include "memory/memory.h"
 #include "mips/mips.H"
-#include "gptimer/gptimer.h"
+#include "memory/memory.h"
+#include "bus/bus.h"
 
-
-int sc_main(int ac, char *av[])
+  int sc_main(int ac, char *av[])
 {
 
-    sc_clock p_clock("p_clock", 4, SC_NS);
-
-    //!  ISA simulator
-    cout << "Creating MIPS processor" << endl;
-    mips mips_proc1("mips");
-
-    cout << "Creating Platform preipherals" << endl;
-
-    //! Bus
-    cout << "Creating bus routing" << endl;
-    ac_tlm_bus bus("bus");
-    // Memory
-    cout << "Creating Flash memory" << endl;
-    ac_tlm_mem mem("mem");
-    // Timer
-    cout << "Creating timer" << endl;
-    grlib::gptimer gptimer("gptimer",40);
-
+  //!  ISA simulator
+  mips mips_proc1("mips");
+  //! Bus
+  ac_tlm_bus bus("bus");
+  // Memory
+  ac_tlm_mem mem("mem");
 
 #ifdef AC_DEBUG
-    ac_trace("mips1_proc1.trace");
-#endif
+  ac_trace("mips1_proc1.trace");
+#endif 
 
-    gptimer.clk(p_clock);
+  mips_proc1.DM(bus.target_export);
+  bus.MEM_port(mem.target_export);
 
-    mips_proc1.DM(bus.target_export);
-    bus.MEM_port(mem.target_export);
+  mips_proc1.init(ac, av);
+  mips_proc1.set_prog_args();
+  cerr << endl;
 
-    mips_proc1.init(ac, av);
-    mips_proc1.set_prog_args();
-    cerr << endl;
+  sc_start();
 
-    sc_start();
-
-    mips_proc1.PrintStat();
-    cerr << endl;
+  mips_proc1.PrintStat();
+  cerr << endl;
 
 #ifdef AC_STATS
   mips1_proc1.ac_sim_stats.time = sc_simulation_time();
   mips1_proc1.ac_sim_stats.print();
-#endif
-    
-#ifdef AC_DEBUG
-    ac_close_trace();
-#endif
+#endif 
 
-    return mips_proc1.ac_exit_status;
+#ifdef AC_DEBUG
+  ac_close_trace();
+#endif 
+
+  return mips_proc1.ac_exit_status;
 }

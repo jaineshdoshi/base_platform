@@ -23,7 +23,7 @@ static int processors_started = 0;
 // Generic instruction behavior method.
 void ac_behavior( instruction )
 {
-   dbg_printf("----- PC=%#x ----- %lld\n", (int) ac_pc, ac_instr_counter);
+  dbg_printf("----- PC=%#x ----- %lld\n", (int) ac_pc, ac_instr_counter);
 #ifndef NO_NEED_PC_UPDATE
   ac_pc = npc;
   npc = ac_pc + 4;
@@ -376,13 +376,6 @@ void ac_behavior( divs )
   dbg_printf("Result = %f\n", res);
 }
 
-void ac_behavior( mfc0 )
-{
-  dbg_printf("mfc0 r%d, cp0r%d\n", rt, rd);
-  RB[rt] = CRB[rd];
-  dbg_printf("Result = 0x%X\n", RB[rt]);
-}
-
 void ac_behavior( mfc1 )
 {
   dbg_printf("mfc1 %%%d, %%f%d\n", rt, rd);
@@ -413,20 +406,13 @@ void ac_behavior( muld )
   save_double(res, shamt);
   dbg_printf("Result = %lf\n", res);
 }
-  
+
 void ac_behavior( muls )
 {
   dbg_printf("mul.s %%f%d, %%f%d, %%f%d\n", shamt, rd, rt);
   float res = load_float(rd) * load_float(rt);
   save_float(res, shamt);
   dbg_printf("Result = %f\n", res);
-}
-
-void ac_behavior( mtc0 )
-{
-  dbg_printf("mtc0 r%d, cp0r%d\n", rt, rd);
-  CRB[rd] = RB[rt];
-  dbg_printf("Result = 0x%X\n", CRB[rd]);
 }
 
 void ac_behavior( mtc1 )
@@ -644,7 +630,7 @@ void ac_behavior( slti )
   // Set the RD if RS< IMM
   if( (ac_Sword) RB[rs] < (ac_Sword) imm )
     RB[rt] = 1;
-  // Else reset RD
+    // Else reset RD
   else
     RB[rt] = 0;
   dbg_printf("Result = %#x\n", RB[rt]);
@@ -656,7 +642,7 @@ void ac_behavior( sltiu )
   // Set the RD if RS< IMM
   if( (ac_Uword) RB[rs] < (ac_Uword) imm )
     RB[rt] = 1;
-  // Else reset RD
+    // Else reset RD
   else
     RB[rt] = 0;
   dbg_printf("Result = %#x\n", RB[rt]);
@@ -735,7 +721,7 @@ void ac_behavior( slt )
   // Set the RD if RS< RT
   if( (ac_Sword) RB[rs] < (ac_Sword) RB[rt] )
     RB[rd] = 1;
-  // Else reset RD
+    // Else reset RD
   else
     RB[rd] = 0;
   dbg_printf("Result = %#x\n", RB[rd]);
@@ -747,7 +733,7 @@ void ac_behavior( sltu )
   // Set the RD if RS < RT
   if( RB[rs] < RB[rt] )
     RB[rd] = 1;
-  // Else reset RD
+    // Else reset RD
   else
     RB[rd] = 0;
   dbg_printf("Result = %#x\n", RB[rd]);
@@ -1110,7 +1096,7 @@ void ac_behavior( sys_call )
 
 void ac_behavior( instr_break )
 {
-  fprintf(stderr, "instr_break behavior not implemented.\n"); 
+  fprintf(stderr, "instr_break behavior not implemented.\n");
   exit(EXIT_FAILURE);
 }
 
@@ -1337,21 +1323,74 @@ void ac_behavior( msubs )
 }
 
 
+void ac_behavior( deret )
+{
+  dbg_printf("deret");
+//  Debug register DM bit set to 0
+  C0_RB[23*8 + 0] = (C0_RB[23*8 + 0]) & (0 << 30);
+//  Debug register IEXI bit set to 0
+  C0_RB[23*8 + 0] = (C0_RB[23*8 + 0]) & (0 << 20);
+#ifndef NO_NEED_PC_UPDATE
+  npc = C0_RB[24*8 + 0];
+#endif
+
+// set EXL bit of CRB's Status register to 0 -- check if needed
+  dbg_printf("New PC = %#x\n", C0_RB[24*8]);
+}
+
 void ac_behavior( eret )
 {
   dbg_printf("eret");
-  #ifndef NO_NEED_PC_UPDATE
-    npc = CRB[14];
-  #endif
-  ///set EXL bit of CRB's Status register to 0
-  dbg_printf("Result = %#x\n", CRB[14]);
+//  Status register ERL bit
+  bool Status_ERL = (C0_RB[12*8 + 0]) & (1 << 2) ? '1' : '0';
+//  Status register EXL bit
+  bool Status_EXL = (C0_RB[12*8 + 0]) & (1 << 1) ? '1' : '0';
+//  SRSCtl register HSS value is non zero
+  int SRSCtl_HSS = ((C0_RB[12*8 + 2]) & (15 << 26))>>26;
+//  Status register BEV bit
+  bool Status_BEV = (C0_RB[12*8 + 0]) & (1 << 22) ? '1' : '0';
+//  SRSCtl register CSS value
+  uint32_t SRSCtl_CSS = (C0_RB[12*8 + 2]) & (15 << 0);
+//  SRSCtl register PSS value
+  uint32_t SRSCtl_PSS = ((C0_RB[12*8 + 2]) & (15 << 6))>>6;
+
+
+  uint32_t Error_EPC = C0_RB[30*8 + 0];
+  uint32_t temp;
+  uint32_t EPC = C0_RB[14*8 + 0];
+  if(Status_ERL == 1){
+    temp = Error_EPC;
+    Status_ERL = 0;
+    C0_RB[12*8 + 0] = (C0_RB[12*8 + 0]) | (1 << 2);
+  } else {
+    temp = EPC;
+    Status_EXL = 0;
+    C0_RB[12 * 8 + 0] = (C0_RB[12 * 8 + 0]) | (1 << 1);
+    if ((SRSCtl_HSS > 0) && (Status_BEV == 0)) {
+      SRSCtl_CSS = SRSCtl_PSS;
+      C0_RB[12 * 8 + 2] = (C0_RB[12 * 8 + 2]) & (0xFFFFFFF0 << 0);
+      C0_RB[12 * 8 + 2] = (C0_RB[12 * 8 + 2]) | (SRSCtl_CSS << 0);
+    }
+  }
+#ifndef NO_NEED_PC_UPDATE
+  npc = temp;
+#endif
+  dbg_printf("Returned PC = %#x\n", temp);
 }
 
-void ac_behavior( deret )
+
+// Coprocessor0 Registers Read/Write functions
+
+void ac_behavior( mfc0 )
 {
-    dbg_printf("deret");
-#ifndef NO_NEED_PC_UPDATE
-    npc = CRB[24];
-#endif
-    dbg_printf("Result = %#x\n", CRB[24]);
+  dbg_printf("mfc0 r%d, cp0r%d\n", rt, rd);
+  RB[rt] = C0_RB[rd*8+sel];
+  dbg_printf("Result = 0x%X\n", RB[rt]);
+}
+
+void ac_behavior( mtc0 )
+{
+  dbg_printf("mtc0 r%d, cp0r%d, sel%d \n", rt, rd, sel);
+  C0_RB[rd*8+sel] = RB[rt];
+  dbg_printf("Result = 0x%X\n", C0_RB[rd*8+sel]);
 }

@@ -12,8 +12,8 @@
  * http://www.lsc.ic.unicamp.br                       *
  ******************************************************/
  
-// Rodolfo editou aqui
-//
+
+
 const char *project_name="mips";
 const char *project_file="mips1.ac";
 const char *archc_version="2.0beta1";
@@ -21,25 +21,55 @@ const char *archc_options="-abi -dy ";
 
 #include <systemc.h>
 #include "mips/mips.H"
+#include "tlb/tlb.h"
 #include "memory/memory.h"
 #include "bus/bus.h"
+//#include "gptimer/gptimer.h"
+//#include "irqmp/irqmp.h"
 
-  int sc_main(int ac, char *av[])
+//using grlib::gptimer;
+//using grlib::irqmp;
+
+int sc_main(int ac, char *av[])
 {
+  // Clock
+//  sc_clock p_clock("p_clock", 4, SC_NS);
 
   //!  ISA simulator
+  cout << "Creating Processor" << endl;
   mips mips_proc1("mips");
+  //! TLB
+  cout << "Creating TLB" << endl;
+  ac_tlm_tlb tlb("tlb");
   //! Bus
+  cout << "Creating Bus routing system" << endl;
   ac_tlm_bus bus("bus");
-  // Memory
+  //! Memory
+  cout << "Creating Memory" << endl;
   ac_tlm_mem mem("mem");
+//  //! GPtimer
+//  cout << "Creating Timer" << endl;
+//  gptimer("gptimer",50);
+//  //! Interrupt Control Unit
+//  cout << "Creating Interrupt Controller" << endl;
+//  irwmp("irqmp");
+
+
+//  gptimer.clk(p_clock);
+//  irqmp.clk(p_clock);
+
 
 #ifdef AC_DEBUG
   ac_trace("mips1_proc1.trace");
 #endif 
 
-  mips_proc1.DM(bus.target_export);
+  mips_proc1.DM(tlb.target_export);
+  tlb.BUS_port(bus.target_export);
+  bus.TLB_port(tlb.target_export);
   bus.MEM_port(mem.target_export);
+
+//  mips_proc1.DM(bus.target_export);
+//  bus.MEM_port(mem.target_export);
 
   mips_proc1.init(ac, av);
   mips_proc1.set_prog_args();

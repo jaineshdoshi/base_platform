@@ -12,7 +12,7 @@
  * @version   0.1
  * @date      Sun, 02 Apr 2006 08:07:46 -0200
  *
- * @brief     Defines a ac_tlm bus.
+ * @brief     Defines a ac_tlm TLB block
  *
  * @attention Copyright (C) 2002-2005 --- The ArchC Team
  *
@@ -31,8 +31,8 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef _BUS_H_
-#define _BUS_H_
+#ifndef _TLB_H_
+#define _TLB_H_
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -50,19 +50,19 @@ using tlm::tlm_transport_if;
 
 //////////////////////////////////////////////////////////////////////////////
 
+// Uncomment this for the debug model
 //#define DEBUG
 
-
-/// A TLM memory
-class ac_tlm_bus :
+/// A TLM TLB
+class ac_tlm_tlb :
   public sc_module,
   public ac_tlm_transport_if // Using ArchC TLM protocol
 {
 public:
   /// Exposed port with ArchC interface
   sc_export<ac_tlm_transport_if> target_export;
-  ac_tlm_port TLB_port;
-  ac_tlm_port MEM_port;
+  ac_tlm_port BUS_port;
+
 
   /**
    * Implementation of TLM transport method that
@@ -77,13 +77,13 @@ public:
   /**
    * Default constructor.
    */
-  ac_tlm_bus(sc_module_name module_name);
+  ac_tlm_tlb(sc_module_name module_name);
 
   /**
    * Default destructor.
    */
-  ~ac_tlm_bus();
+  ~ac_tlm_tlb();
 
 };
 
-#endif //_BUS_H_
+#endif //_TLB_H_

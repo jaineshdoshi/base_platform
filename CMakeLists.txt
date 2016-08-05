@@ -5,10 +5,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 FILE(GLOB MIPS mips/*.cpp)
 FILE(GLOB BUS bus/*.cpp)
+FILE(GLOB TLB tlb/*.cpp)
 FILE(GLOB MEMORY memory/*.cpp)
 FILE(GLOB GPTIMER gptimer/*.cpp)
 FILE(GLOB IRQMP irqmp/*.cpp)
-SET(SOURCE_FILES ${MIPS} ${BUS} ${MEMORY} ${GPTIMER} ${IRQMP} main.cpp)
+SET(SOURCE_FILES ${MIPS} ${BUS} ${MEMORY} ${GPTIMER} ${IRQMP} ${TLB} main.cpp)
 
 file(GLOB_RECURSE AC_HEADERS "../acinstall/include/*.H")
 file(GLOB_RECURSE SC_HEADERS "../systemcinstall/include/*.h")

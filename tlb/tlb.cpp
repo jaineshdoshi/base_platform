@@ -12,7 +12,7 @@
  * @version   0.1
  * @date      Sun, 02 Apr 2006 08:07:46 -0200
  *
- * @brief     Implements a ac_tlm bus.
+ * @brief     Implements a ac_tlm TLB.
  *
  * @attention Copyright (C) 2002-2005 --- The ArchC Team
  *
@@ -34,39 +34,52 @@
 // SystemC includes
 // ArchC includes
 
-#include "bus.h"
+#include "tlb.h"
 
 //////////////////////////////////////////////////////////////////////////////
 
+// Uncomment this for the debug model
+#define TLB_DEBUG
+
 
 /// Constructor
-ac_tlm_bus::ac_tlm_bus(sc_module_name module_name):
+ac_tlm_tlb::ac_tlm_tlb(sc_module_name module_name):
   sc_module(module_name),
   target_export("iport"),
-  TLB_port("TLB_port",536870912U),
-  MEM_port("MEM_port", 536870912U) // This is the memory port, assigned for 512MB
+  BUS_port("BUS_port",0U) // This is the port that connects to the actual bus
 {
-    /// Binds target_export to the memory
-    target_export(*this);
+  /// Binds target_export to the bus
+  target_export(*this);
 
 }
 
 /// Destructor
-ac_tlm_bus::~ac_tlm_bus() 
+ac_tlm_tlb::~ac_tlm_tlb()
 {
 }
 
-/// This is the transport method. Everything should go through this file.
-/// To connect more components, you will need to have an if/then/else or a switch
-/// statement inside this method. Notice that ac_tlm_req has an address field.
-ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request)
+
+/// This routine is for the translation of virtual addresses to real memory addresses
+ac_tlm_rsp ac_tlm_tlb::transport(const ac_tlm_req &request)
 {
   ac_tlm_rsp response;
-  /// MEMORY REQUEST
-  if(request.addr >= 0x00000000 && request.addr < 0x80000000){
-    response = MEM_port->transport(request);
+
+// Check the address requested
+  if(request.addr >= 0x80000000){
+    // Virtual memory is being accessed in this request
+    ac_tlm_req req = request;
+    req.addr = request.addr - 0x80000000;
+#ifndef TLB_DEBUG
+    cout << "Actual Address to Bus (Memory): "<< std::hex req.addr << endl;
+#endif
+    response = BUS_port->transport(req);
     return response;
   } else {
-    cerr<<"\n Error:trying to access address outside of allowed memory : " << request.addr << endl;
+    // Actual memory accessed
+#ifndef TLB_DEBUG
+    cout <<"Address requested"<< std::hex request.addr << endl;
+#endif
+    response = BUS_port->transport(request);
+    return response;
   }
 }

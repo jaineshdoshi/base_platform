@@ -43,8 +43,9 @@
 ac_tlm_bus::ac_tlm_bus(sc_module_name module_name):
   sc_module(module_name),
   target_export("iport"),
-  TLB_port("TLB_port",536870912U),
-  MEM_port("MEM_port", 536870912U) // This is the memory port, assigned for 512MB
+  MEM_port("MEM_port", 536870912U), // This is the memory port, assigned for 512MB
+  GPTIMER_port("GPTIMER_port", 0U),  // Port that connects to the timer unit
+  IRQ_port("IRQ_port", 0U)
 {
     /// Binds target_export to the memory
     target_export(*this);

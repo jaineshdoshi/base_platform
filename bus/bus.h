@@ -61,9 +61,9 @@ class ac_tlm_bus :
 public:
   /// Exposed port with ArchC interface
   sc_export<ac_tlm_transport_if> target_export;
-  ac_tlm_port TLB_port;
   ac_tlm_port MEM_port;
-
+  ac_tlm_port GPTIMER_port;
+  ac_tlm_port IRQ_port;
   /**
    * Implementation of TLM transport method that
    * handle packets of the protocol doing apropriate actions.

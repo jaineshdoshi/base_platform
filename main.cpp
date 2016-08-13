@@ -24,8 +24,8 @@ const char *archc_options="-abi -dy ";
 #include "tlb/tlb.h"
 #include "memory/memory.h"
 #include "bus/bus.h"
-//#include "gptimer/gptimer.h"
-//#include "irqmp/irqmp.h"
+#include "gptimer/gptimer.h"
+#include "irqmp/irqmp.h"
 
 //using grlib::gptimer;
 //using grlib::irqmp;
@@ -33,7 +33,7 @@ const char *archc_options="-abi -dy ";
 int sc_main(int ac, char *av[])
 {
   // Clock
-//  sc_clock p_clock("p_clock", 4, SC_NS);
+  sc_clock p_clock("p_clock", 4, SC_NS);
 
   //!  ISA simulator
   cout << "Creating Processor" << endl;
@@ -47,29 +47,28 @@ int sc_main(int ac, char *av[])
   //! Memory
   cout << "Creating Memory" << endl;
   ac_tlm_mem mem("mem");
-//  //! GPtimer
-//  cout << "Creating Timer" << endl;
-//  gptimer("gptimer",50);
-//  //! Interrupt Control Unit
-//  cout << "Creating Interrupt Controller" << endl;
-//  irwmp("irqmp");
+  //! GPtimer Frequency 40Hz
+  cout << "Creating Timer" << endl;
+  grlib::gptimer("gptimer",40);
+  //! Interrupt Control Unit
+  cout << "Creating Interrupt Controller" << endl;
+  grlib::irqmp("irqmp");
 
 
-//  gptimer.clk(p_clock);
-//  irqmp.clk(p_clock);
+  grlib::gptimer.clk(p_clock);
+  grlib::irqmp.clk(p_clock);
 
-
+  grlib::irqmp.CPU_port[0](mips_proc1.)
 #ifdef AC_DEBUG
   ac_trace("mips1_proc1.trace");
 #endif 
 
   mips_proc1.DM(tlb.target_export);
   tlb.BUS_port(bus.target_export);
-  bus.TLB_port(tlb.target_export);
   bus.MEM_port(mem.target_export);
+  bus.GPTIMER_port(grlib::gptimer.target_export);
+  bus.IRQ_port(grlib::irqmp.target.export)
 
-//  mips_proc1.DM(bus.target_export);
-//  bus.MEM_port(mem.target_export);
 
   mips_proc1.init(ac, av);
   mips_proc1.set_prog_args();

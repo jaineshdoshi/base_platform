@@ -27,8 +27,8 @@ const char *archc_options="-abi -dy ";
 #include "gptimer/gptimer.h"
 #include "irqmp/irqmp.h"
 
-//using grlib::gptimer;
-//using grlib::irqmp;
+using grlib::gptimer;
+using grlib::irqmp;
 
 int sc_main(int ac, char *av[])
 {
@@ -49,25 +49,32 @@ int sc_main(int ac, char *av[])
   ac_tlm_mem mem("mem");
   //! GPtimer Frequency 40Hz
   cout << "Creating Timer" << endl;
-  grlib::gptimer("gptimer",40);
+  gptimer timer("timer",40);
   //! Interrupt Control Unit
   cout << "Creating Interrupt Controller" << endl;
-  grlib::irqmp("irqmp");
+  irqmp irq("irq");
+
+  // Clock connections with Peripherals
+  timer.clk(p_clock);
+  irq.clk(p_clock);
+
+  // CPU interrupt port
+  irq.CPU_port[0](mips_proc1.intp);
+
+  // Peripherals connected to Interrupt Controller by ports
+  timer.IRQ_port(irq.target_export);
 
 
-  grlib::gptimer.clk(p_clock);
-  grlib::irqmp.clk(p_clock);
-
-  grlib::irqmp.CPU_port[0](mips_proc1.)
 #ifdef AC_DEBUG
   ac_trace("mips1_proc1.trace");
 #endif 
 
   mips_proc1.DM(tlb.target_export);
+  mips_proc1.ack_port(irq.target_export);
   tlb.BUS_port(bus.target_export);
   bus.MEM_port(mem.target_export);
-  bus.GPTIMER_port(grlib::gptimer.target_export);
-  bus.IRQ_port(grlib::irqmp.target.export)
+  bus.GPTIMER_port(timer.target_export);
+  bus.IRQ_port(irq.target_export);
 
 
   mips_proc1.init(ac, av);

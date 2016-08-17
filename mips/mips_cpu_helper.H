@@ -1,5 +1,5 @@
 /**
- * \file leon_cpu_helper.H
+ * \file mips_cpu_helper.H
  *
  * \brief LEON-3/SPARC v8 CPU helper file.
  *

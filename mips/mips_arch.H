@@ -24,9 +24,9 @@
 #include  "ac_reg.H"
 #include  "ac_tlm_port.H"
 #include  "ac_tlm_intr_port.H"
-#include  "ac_tlm_signal_port.H"
- 
-//!ArchC class for model-specific architectural resources.
+#include "ac_tlm_signal_port.H"
+
+//!ArchC class for model-spe  cific architectural resources.
 
 class mips_arch : public ac_arch_dec_if<mips_parms::ac_word, mips_parms::ac_Hword> {
 public:
@@ -47,9 +47,8 @@ public:
   ac_reg<mips_parms::ac_word> cc;
 #define SLEEP_AWAKE_MODE
   ac_reg<mips_parms::ac_word> intr_reg;
+  ac_tlm_signal_port ack_port;
 
-  //!Interruption acknowledge port
-  ac_tlm_signal_port ack_intp;
 
   //!Constructor.
   explicit mips_arch();

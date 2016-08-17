@@ -41,7 +41,7 @@ namespace grlib {
     //!Create ports to CPU's
     CPU_port    = new sc_port< ac_tlm_transport_if >[ncpu];
     //!IRQMP Registers
-    irqmp_regs = new ATLAS_irqmp_registers
+    irqmp_regs = new ATLAS_irqmp_registers;
 
     //!IRQMP registers initialization
     irqmp_regs->pending   = 0x0;

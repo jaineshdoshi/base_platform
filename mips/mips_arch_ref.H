@@ -22,8 +22,6 @@
 #include  "ac_reg.H"
 #include  "ac_regbank.H"
 #include  "ac_tlm_intr_port.H"
-#include  "ac_tlm_signal_port.H"
-//#include  "altas_trap_selector.H"
 
 
 //!Forward class declaration, needed to compile.
@@ -47,12 +45,6 @@ public:
   ac_reg<mips_parms::ac_word>& id;
   ac_reg<mips_parms::ac_word>& cc;
   ac_reg<mips_parms::ac_word>& intr_reg;
-
-//  //!ATLAS Trap Selector
-//  altas_trap_selector& trap_selector;
-
-  //!Interruption acknowledge port
-  ac_tlm_signal_port& ack_intp;
 
   //!Constructor.
    mips_arch_ref(mips_arch& arch);

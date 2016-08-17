@@ -25,11 +25,11 @@ class mips_intp_handler :
   public ac_intr_handler,
   public mips_arch_ref
 {
- public:
+  public:
 
-  explicit mips_intp_handler(mips_arch& ref) : mips_arch_ref(ref) {}
+  explicit mips_intp_handler(mips_arch& ref) : mips_arch_ref(ref) {};
 
-  void handle(uint32_t value) const;
+  void handle(uint32_t value, uint64_t addr);
 
 };
 

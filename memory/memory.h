@@ -64,6 +64,7 @@ public:
   ac_tlm_rsp_status writem( const uint32_t & , const uint32_t & );
   /// Internal read
   ac_tlm_rsp_status readm( const uint32_t & , uint32_t & );
+  int mem_limit;
 
   /**
    * Implementation of TLM transport method that

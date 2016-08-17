@@ -47,9 +47,12 @@ ac_tlm_mem::ac_tlm_mem( sc_module_name module_name , int k ) :
     /// Binds target_export to the memory
     target_export( *this );
 
+    mem_limit = k;
+
     /// Initialize memory vector
     memory = new uint8_t[ k ];
     for(k=k-1;k>0;k--) memory[k]=0;
+    
 
 }
 
@@ -67,6 +70,10 @@ ac_tlm_mem::~ac_tlm_mem() {
 */
 ac_tlm_rsp_status ac_tlm_mem::writem( const uint32_t &address , const uint32_t &data )
 {
+  if (address >= mem_limit) {
+    printf("MemWrite: Out of memory limit: %x\n", address);
+    exit(1);
+  }  
   *((uint32_t *) &memory[address]) = *((uint32_t *) &data);
   return SUCCESS;
 }
@@ -79,8 +86,12 @@ ac_tlm_rsp_status ac_tlm_mem::writem( const uint32_t &address , const uint32_t &
 */
 ac_tlm_rsp_status ac_tlm_mem::readm( const uint32_t &address , uint32_t &data )
 {
-	*((uint32_t *) &data) = *((uint32_t *) &memory[address]);
-	return SUCCESS;
+  if (address >= mem_limit) {
+    printf("MemRead: Out of memory limit: %x\n", address);
+    exit(1);
+  }  
+  *((uint32_t *) &data) = *((uint32_t *) &memory[address]);
+  return SUCCESS;
 }
 
 

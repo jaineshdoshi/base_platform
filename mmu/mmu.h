@@ -31,8 +31,8 @@
 
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef _TLB_H_
-#define _TLB_H_
+#ifndef _MMU_H_
+#define _MMU_H_
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -53,8 +53,8 @@ using tlm::tlm_transport_if;
 // Uncomment this for the debug model
 //#define DEBUG
 
-/// A TLM TLB
-class ac_tlm_tlb :
+/// A TLM MMU
+class ac_tlm_mmu :
   public sc_module,
   public ac_tlm_transport_if // Using ArchC TLM protocol
 {
@@ -77,13 +77,13 @@ public:
   /**
    * Default constructor.
    */
-  ac_tlm_tlb(sc_module_name module_name);
+  ac_tlm_mmu(sc_module_name module_name);
 
   /**
    * Default destructor.
    */
-  ~ac_tlm_tlb();
+  ~ac_tlm_mmu();
 
 };
 
-#endif //_TLB_H_
+#endif //_MMU_H_

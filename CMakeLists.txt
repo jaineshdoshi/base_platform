@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 FILE(GLOB MIPS mips/*.cpp)
 FILE(GLOB BUS bus/*.cpp)
-FILE(GLOB TLB tlb/*.cpp)
+FILE(GLOB MMU mmu/*.cpp)
 FILE(GLOB MEMORY memory/*.cpp)
 FILE(GLOB GPTIMER gptimer/*.cpp)
 FILE(GLOB IRQMP irqmp/*.cpp)

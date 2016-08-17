@@ -21,7 +21,7 @@ const char *archc_options="-abi -dy ";
 
 #include <systemc.h>
 #include "mips/mips.H"
-#include "tlb/tlb.h"
+#include "mmu/mmu.h"
 #include "memory/memory.h"
 #include "bus/bus.h"
 #include "gptimer/gptimer.h"
@@ -38,9 +38,9 @@ int sc_main(int ac, char *av[])
   //!  ISA simulator
   cout << "Creating Processor" << endl;
   mips mips_proc1("mips");
-  //! TLB
-  cout << "Creating TLB" << endl;
-  ac_tlm_tlb tlb("tlb");
+  //! mmu
+  cout << "Creating mmu" << endl;
+  ac_tlm_mmu mmu("mmu");
   //! Bus
   cout << "Creating Bus routing system" << endl;
   ac_tlm_bus bus("bus");
@@ -69,9 +69,9 @@ int sc_main(int ac, char *av[])
   ac_trace("mips1_proc1.trace");
 #endif 
 
-  mips_proc1.DM(tlb.target_export);
+  mips_proc1.DM(mmu.target_export);
   mips_proc1.ack_port(irq.target_export);
-  tlb.BUS_port(bus.target_export);
+  mmu.BUS_port(bus.target_export);
   bus.MEM_port(mem.target_export);
   bus.GPTIMER_port(timer.target_export);
   bus.IRQ_port(irq.target_export);

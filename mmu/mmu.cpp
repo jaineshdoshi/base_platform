@@ -12,7 +12,7 @@
  * @version   0.1
  * @date      Sun, 02 Apr 2006 08:07:46 -0200
  *
- * @brief     Implements a ac_tlm TLB.
+ * @brief     Implements a ac_tlm Memory Management Unit.
  *
  * @attention Copyright (C) 2002-2005 --- The ArchC Team
  *
@@ -34,16 +34,16 @@
 // SystemC includes
 // ArchC includes
 
-#include "tlb.h"
+#include "mmu.h"
 
 //////////////////////////////////////////////////////////////////////////////
 
 // Uncomment this for the debug model
-#define TLB_DEBUG
+//#define MMU_DEBUG
 
 
 /// Constructor
-ac_tlm_tlb::ac_tlm_tlb(sc_module_name module_name):
+ac_tlm_mmu::ac_tlm_mmu(sc_module_name module_name):
   sc_module(module_name),
   target_export("iport"),
   BUS_port("BUS_port",0U) // This is the port that connects to the actual bus
@@ -54,13 +54,13 @@ ac_tlm_tlb::ac_tlm_tlb(sc_module_name module_name):
 }
 
 /// Destructor
-ac_tlm_tlb::~ac_tlm_tlb()
+ac_tlm_mmu::~ac_tlm_mmu()
 {
 }
 
 
 /// This routine is for the translation of virtual addresses to real memory addresses
-ac_tlm_rsp ac_tlm_tlb::transport(const ac_tlm_req &request)
+ac_tlm_rsp ac_tlm_mmu::transport(const ac_tlm_req &request)
 {
   ac_tlm_rsp response;
 
@@ -69,15 +69,15 @@ ac_tlm_rsp ac_tlm_tlb::transport(const ac_tlm_req &request)
     // Virtual memory is being accessed in this request
     ac_tlm_req req = request;
     req.addr = request.addr - 0x80000000;
-#ifndef TLB_DEBUG
-    cout << "Actual Address to Bus (Memory): "<< std::hex req.addr << endl;
+#ifndef MMU_DEBUG
+//    cout << "Actual Address to Bus (Memory): "<< req.addr << endl;
 #endif
     response = BUS_port->transport(req);
     return response;
   } else {
     // Actual memory accessed
-#ifndef TLB_DEBUG
-    cout <<"Address requested"<< std::hex request.addr << endl;
+#ifndef MMU_DEBUG
+//    cout <<"Address requested"<< request.addr << endl;
 #endif
     response = BUS_port->transport(request);
     return response;

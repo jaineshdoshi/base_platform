@@ -9,7 +9,7 @@ FILE(GLOB MMU mmu/*.cpp)
 FILE(GLOB MEMORY memory/*.cpp)
 FILE(GLOB GPTIMER gptimer/*.cpp)
 FILE(GLOB IRQMP irqmp/*.cpp)
-SET(SOURCE_FILES ${MIPS} ${BUS} ${MEMORY} ${GPTIMER} ${IRQMP} ${TLB} main.cpp)
+SET(SOURCE_FILES ${MIPS} ${BUS} ${MEMORY} ${GPTIMER} ${IRQMP} ${MMU} main.cpp)
 
 file(GLOB_RECURSE AC_HEADERS "../acinstall/include/*.H")
 file(GLOB_RECURSE SC_HEADERS "../systemcinstall/include/*.h")

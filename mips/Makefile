@@ -44,7 +44,7 @@ ACHEAD := $(TARGET)_parms.H $(TARGET)_arch.H $(TARGET)_arch_ref.H $(TARGET)_isa.
 ACLIBFILES := ac_decoder_rt.o ac_module.o ac_storage.o ac_utils.o  ac_syscall.o ac_tlm_port.o ac_tlm_intr_port.o 
 
 # These are the source files provided by the user + ArchC sources
-SRCS := main.cpp $(ACSRCS) $(TARGET)_syscall.cpp $(TARGET)_intr_handlers.cpp
+SRCS := main.cpp $(ACSRCS)  $(TARGET)_syscall.cpp $(TARGET)_intr_handlers.cpp
 
 OBJS := $(SRCS:.cpp=.o)
 

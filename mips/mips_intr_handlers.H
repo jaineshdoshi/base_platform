@@ -29,7 +29,7 @@ class mips_intp_handler :
 
   explicit mips_intp_handler(mips_arch& ref) : mips_arch_ref(ref) {};
 
-  void handle(uint32_t value, uint64_t addr);
+    void handle(uint32_t value, uint64_t addr);
 
 };
 

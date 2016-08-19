@@ -35,6 +35,7 @@ AC_ISA(mips){
   ac_instr<Type_I> b, beq, bne, blez, bgtz, bltz, bgez, bltzal, bgezal;
   ac_instr<Type_R> instr_break;
   ac_instr<Type_S> sys_call, eret, deret;
+  ac_instr<Type_I> cache;
 
   // mips-II
   ac_instr<Type_R> sync, teq;
@@ -591,6 +592,13 @@ AC_ISA(mips){
     deret.set_asm("deret %imm", code);
     deret.set_decoder(op=0x10, func=0x1f);
 
+//    cache.set_asm("cache %reg %imm(%reg)", rs, imm, rt);
+//    cache.set_decoder(op=0x2f);
+
+//    lbu.set_asm("lbu %reg, \%lo(%exp)(%reg)", rt, imm, rs);
+//    lbu.set_asm("lbu %reg, (%reg)", rt, rs, imm=0);
+    cache.set_asm("cache %reg, %imm (%reg)", rs, imm, rt);
+    cache.set_decoder(op=0x2f);
 
     pseudo_instr("li %reg, %imm") {
       "lui %0, \%hi(%1)";

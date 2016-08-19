@@ -1394,3 +1394,45 @@ void ac_behavior( mtc0 )
   C0_RB[rd*8+sel] = RB[rt];
   dbg_printf("Result = 0x%X\n", C0_RB[rd*8+sel]);
 }
+
+
+void ac_behavior( cache )
+{
+  dbg_printf("cache sub-opcode=%d, base_reg=r%d, offset=%d\n", rs, rt, imm & 0xFFFF);
+
+  int value = (0x0000FFFF & imm);
+  int mask = 0x00008000;
+  if (mask & imm) {
+    value += 0xFFFF0000;
+  }
+  uint32_t vAddr = RB[rt] + value;
+//  uint32_t vAddr = RB[rt] + sign_extend(imm);
+
+
+//  uint32_t pAddr = Address_Translation(vAddr);
+    uint32_t pAddr = vAddr;
+    if((rs & 28)>>2 == 2){
+      if((rs & 3) == 0 || (rs & 3) == 1){
+        //! Write the tag for the cache block at the specified index from the
+        //! TagLo and TagHi Coprocessor 0 registers.
+      }
+    }
+    dbg_printf("Cache operation called \n");
+}
+
+
+
+//uint32_t Address_Translation(uint32_t virtual_address){
+//  //! Done by MMU in this case
+//  uint32_t physical_address = virtual_address;
+//  return physical_address;
+//}
+
+//int sign_extend(int16_t number) {
+//  int value = (0x0000FFFF & number);
+//  int mask = 0x00008000;
+//  if (mask & number) {
+//    value += 0xFFFF0000;
+//  }
+//  return value;
+//}

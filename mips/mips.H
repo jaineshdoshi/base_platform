@@ -64,6 +64,7 @@ public:
     start_up=1;
     id.write(globalId++);
     set_proc_freq(1000/module_period_ns);
+//    intp_hnd.Set_External_Interrupt_Contoller_mode();
   }
 
   void set_proc_freq(unsigned int proc_freq);
@@ -90,4 +91,3 @@ public:
 
 };
 #endif  //_MIPS_H
-

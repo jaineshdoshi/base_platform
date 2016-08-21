@@ -78,6 +78,7 @@ typedef ac_memport<mips_parms::ac_word, mips_parms::ac_Hword> ac_memory;
 #define AC_BEHAVIOR_sys_call() mips_parms::mips_isa::behavior_sys_call(uint8_t op, uint32_t code, uint8_t func)
 #define AC_BEHAVIOR_eret() mips_parms::mips_isa::behavior_eret(uint8_t op, uint32_t code, uint8_t func)
 #define AC_BEHAVIOR_deret() mips_parms::mips_isa::behavior_deret(uint8_t op, uint32_t code, uint8_t func)
+#define AC_BEHAVIOR_cache() mips_parms::mips_isa::behavior_cache(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm)
 #define AC_BEHAVIOR_sync() mips_parms::mips_isa::behavior_sync(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func)
 #define AC_BEHAVIOR_teq() mips_parms::mips_isa::behavior_teq(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func)
 #define AC_BEHAVIOR_ll() mips_parms::mips_isa::behavior_ll(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm)
@@ -159,7 +160,7 @@ typedef ac_memport<mips_parms::ac_word, mips_parms::ac_Hword> ac_memory;
 #define AC_BEHAVIOR_swxc1() mips_parms::mips_isa::behavior_swxc1(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func)
 #define AC_BEHAVIOR_mfc0() mips_parms::mips_isa::behavior_mfc0(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t constant, uint8_t sel)
 #define AC_BEHAVIOR_mtc0() mips_parms::mips_isa::behavior_mtc0(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t constant, uint8_t sel)
-#define AC_BEHAVIOR_cache() mips_parms::mips_isa::behavior_cache(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm)
+
 
 #endif //_MIPS_BHV_MACROS_H
 

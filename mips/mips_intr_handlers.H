@@ -29,8 +29,21 @@ class mips_intp_handler :
 
   explicit mips_intp_handler(mips_arch& ref) : mips_arch_ref(ref) {};
 
-    void handle(uint32_t value, uint64_t addr);
+  void handle(uint32_t value, uint64_t addr);
 
+  void Set_External_Interrupt_Contoller_mode(void){
+    //! Set VEIC bit of Config3 register to 1
+    C0_RB[16*8 + 3] = C0_RB[16*8 + 3] | 0x00000040;
+    //! Set VS bit of IntCtl register to 1
+    //! The value of this field is not meaningful if External
+    //! Interrupt Controller Mode is enabled. The external interrupt
+    //! controller is expected to provide this information for that interrupt mode
+    C0_RB[12*8 + 1] = C0_RB[12*8 + 1] | 0x00000020;
+    //! Set IV bit of Cause register to  1
+    C0_RB[13*8 + 0] = C0_RB[13*8 + 0] | 0x00800000;
+    //! Set BEV bit of Status register to 1
+    C0_RB[12*8 + 0] = C0_RB[12*8 + 0] | 0x00400000;
+  }
 };
 
 

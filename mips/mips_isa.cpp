@@ -42,11 +42,14 @@ void ac_behavior(begin)
 {
   dbg_printf("@@@ begin behavior @@@\n");
   npc = ac_pc + 4;
-
   for (int regNum = 0; regNum < 32; regNum ++)
     RB[regNum] = 0;
   hi = 0;
   lo = 0;
+
+//! Disable Interrupts EI in Statsu Register is set to 0
+  C0_RB[12*8 + 0] = C0_RB[12*8 + 0] & (0xFFFFFFFE);
+
 }
 
 // Behavior called after finishing simulation
@@ -1383,7 +1386,7 @@ void ac_behavior( eret )
 
 void ac_behavior( mfc0 )
 {
-  dbg_printf("mfc0 r%d, cp0r%d\n", rt, rd);
+  dbg_printf("mfc0 r%d, cp0r%d, sel%d\n", rt, rd, sel);
   RB[rt] = C0_RB[rd*8+sel];
   dbg_printf("Result = 0x%X\n", RB[rt]);
 }
@@ -1391,7 +1394,16 @@ void ac_behavior( mfc0 )
 void ac_behavior( mtc0 )
 {
   dbg_printf("mtc0 r%d, cp0r%d, sel%d \n", rt, rd, sel);
-  C0_RB[rd*8+sel] = RB[rt];
+  if(rd == 12 && sel==0)
+  {
+    C0_RB[rd*8+sel] = RB[rt];
+    //! Disable Interrupts EI in Statsu Register is set to 0
+    C0_RB[12*8 + 0] = C0_RB[12*8 + 0] & (0xFFFFFFFE);
+  }
+  else
+  {
+    C0_RB[rd*8+sel] = RB[rt];
+  }
   dbg_printf("Result = 0x%X\n", C0_RB[rd*8+sel]);
 }
 

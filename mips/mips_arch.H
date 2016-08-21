@@ -49,7 +49,6 @@ public:
   ac_reg<mips_parms::ac_word> intr_reg;
   ac_tlm_signal_port ack_port;
 
-
   //!Constructor.
   explicit mips_arch();
 

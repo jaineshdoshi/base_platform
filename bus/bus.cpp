@@ -45,7 +45,8 @@ ac_tlm_bus::ac_tlm_bus(sc_module_name module_name):
   target_export("iport"),
   MEM_port("MEM_port", 536870912U), // This is the memory port, assigned for 512MB
   GPTIMER_port("GPTIMER_port", 0U),  // Port that connects to the timer unit
-  IRQ_port("IRQ_port", 0U)
+  IRQ_port("IRQ_port", 0U),
+  UART_port("UART_port", 0U)
 {
     /// Binds target_export to the memory
     target_export(*this);
@@ -53,7 +54,7 @@ ac_tlm_bus::ac_tlm_bus(sc_module_name module_name):
 }
 
 /// Destructor
-ac_tlm_bus::~ac_tlm_bus() 
+ac_tlm_bus::~ac_tlm_bus()
 {
 }
 
@@ -67,7 +68,13 @@ ac_tlm_rsp ac_tlm_bus::transport(const ac_tlm_req &request)
   if(request.addr >= 0x00000000 && request.addr < 0x80000000){
     response = MEM_port->transport(request);
     return response;
-  } else {
+  }
+  else if(request.addr >= 0xBF000900 && request.addr < 0xBF000940){
+    //! Atlas Serial UART unit accessed
+    response = UART_port->transport(request);
+    return response;
+  }
+    else {
     cerr<<"\n Error:trying to access address outside of allowed memory : " << request.addr << endl;
   }
 }

@@ -64,6 +64,7 @@ public:
   ac_tlm_port MEM_port;
   ac_tlm_port GPTIMER_port;
   ac_tlm_port IRQ_port;
+  ac_tlm_port UART_port;
   /**
    * Implementation of TLM transport method that
    * handle packets of the protocol doing apropriate actions.

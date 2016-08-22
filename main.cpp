@@ -26,9 +26,11 @@ const char *archc_options="-abi -dy ";
 #include "bus/bus.h"
 #include "gptimer/gptimer.h"
 #include "irqmp/irqmp.h"
+#include "apbuart/apbuart.h"
 
 using grlib::gptimer;
 using grlib::irqmp;
+using grlib::apbuart;
 
 int sc_main(int ac, char *av[])
 {
@@ -53,6 +55,9 @@ int sc_main(int ac, char *av[])
   //! Interrupt Control Unit
   cout << "Creating Interrupt Controller" << endl;
   irqmp irq("irq");
+  //! UART serial Unit
+  cout << "Creating UART Serial Unit" << endl;
+  apbuart uart("uart");
 
   // Clock connections with Peripherals
   timer.clk(p_clock);
@@ -63,7 +68,7 @@ int sc_main(int ac, char *av[])
 
   // Peripherals connected to Interrupt Controller by ports
   timer.IRQ_port(irq.target_export);
-
+  uart.IRQ_port(irq.target_export);
 
 #ifdef AC_DEBUG
   ac_trace("mips1_proc1.trace");
@@ -75,6 +80,7 @@ int sc_main(int ac, char *av[])
   bus.MEM_port(mem.target_export);
   bus.GPTIMER_port(timer.target_export);
   bus.IRQ_port(irq.target_export);
+  bus.UART_port(uart.target_export);
 
 
   mips_proc1.init(ac, av);

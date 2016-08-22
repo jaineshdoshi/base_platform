@@ -77,10 +77,17 @@ ac_tlm_rsp ac_tlm_mmu::transport(const ac_tlm_req &request)
 
     ac_tlm_req req = request;
     req.addr = request.addr - 0x80000000;
-//#ifndef MMU_DEBUG
+#ifndef MMU_DEBUG
     cout << "Actual Address to Bus (Memory): "<< req.addr << endl;
-//#endif
+#endif
     response = BUS_port->transport(req);
+    return response;
+  }
+
+//  else if(request.addr >= 0xBF000900 && request.addr <0xBF000940){
+  else if(request.addr >= 0xBF000400 && request.addr <0xBF00052){
+    //! Atlas Serial UART unit accessed
+    response = BUS_port->transport(request);
     return response;
   }
 
@@ -93,17 +100,17 @@ ac_tlm_rsp ac_tlm_mmu::transport(const ac_tlm_req &request)
 
     ac_tlm_req req = request;
     req.addr = request.addr & 0x1FFFFFFF;
-//#ifndef MMU_DEBUG
+#ifndef MMU_DEBUG
     cout << "Actual Address to Bus (Memory): "<< req.addr << endl;
-//#endif
+#endif
     response = BUS_port->transport(req);
     return response;
   }
   else {
     // Actual memory accessed
-//#ifndef MMU_DEBUG
+#ifndef MMU_DEBUG
     cout <<"Address requested"<< request.addr << endl;
-//#endif
+#endif
     response = BUS_port->transport(request);
     return response;
   }

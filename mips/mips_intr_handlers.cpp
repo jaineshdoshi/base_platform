@@ -22,21 +22,23 @@
 using namespace mips_parms;
 
 // Interrupt handler behavior for interrupt port intr_port.
-void ac_behavior(intr_port, value, addr) {
-   if (value == INTR_PROC_OFF) { 
+void ac_behavior(intp, value, addr){
+
+  if(value == INTR_PROC_OFF){
        //printf("\nINSTR_HANDLER: Processor %d (mips) is sleeping." , id.read()); 
-       intr_reg.write(value); 
-   } 
-   else if (value == INTR_PROC_ON) { 
+//       intr_reg.write(value);
+  }
+//  else if (value == INTR_PROC_ON){
        //printf("\nINSTR_HANDLER: Processor %d (mips) is waking up." , id.read()); 
-       intr_reg.write(value); 
-       wake->notify(sc_core::SC_ZERO_TIME); 
+//       intr_reg.write(value);
+//       wake->notify(sc_core::SC_ZERO_TIME);
 
        /* ac_release update a signal to re-start the processor simulator   */ 
        /* See mips_isa::ac_behavior (instruction) (mips_isa.cpp)               */ 
        //ac_release();	
-   }
-   else { 
-       printf("\nINSTR_HANDLER: Processor %d (mips) unrecognized interuption code %d. Ignoring.", id.read(), value); 
-   }
+//  }
+  else{
+//       printf("\nINSTR_HANDLER: Processor %d (mips) unrecognized interuption code %d. Ignoring.", id.read(), value);
+    printf("\nINSTR_HANDLER: Processor (mips) unrecognized interuption code %d. Ignoring.", value);
+  }
 }

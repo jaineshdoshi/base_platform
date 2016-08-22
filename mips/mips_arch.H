@@ -23,8 +23,10 @@
 #include  "ac_regbank.H"
 #include  "ac_reg.H"
 #include  "ac_tlm_port.H"
- 
-//!ArchC class for model-specific architectural resources.
+#include  "ac_tlm_intr_port.H"
+#include "ac_tlm_signal_port.H"
+
+//!ArchC class for model-spe  cific architectural resources.
 
 class mips_arch : public ac_arch_dec_if<mips_parms::ac_word, mips_parms::ac_Hword> {
 public:
@@ -37,13 +39,15 @@ public:
   ac_memport<mips_parms::ac_word, mips_parms::ac_Hword> DM_mport;
   ac_regbank<32, mips_parms::ac_word, mips_parms::ac_Dword> RB;
   ac_regbank<32, mips_parms::ac_word, mips_parms::ac_Dword> RBF;
-  ac_regbank<32, mips_parms::ac_word, mips_parms::ac_Dword> CRB;
+  ac_regbank<256, mips_parms::ac_word, mips_parms::ac_Dword> C0_RB;
   ac_reg<mips_parms::ac_word> npc;
   ac_reg<mips_parms::ac_word> hi;
   ac_reg<mips_parms::ac_word> lo;
   ac_reg<mips_parms::ac_word> id;
   ac_reg<mips_parms::ac_word> cc;
-
+#define SLEEP_AWAKE_MODE
+  ac_reg<mips_parms::ac_word> intr_reg;
+  ac_tlm_signal_port ack_port;
 
   //!Constructor.
   explicit mips_arch();

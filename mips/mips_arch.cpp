@@ -13,6 +13,7 @@
  ******************************************************/
  
 
+
 #include "mips_arch.H"
 
 
@@ -23,12 +24,14 @@ mips_arch::mips_arch() :
   DM_mport(*this, DM),
   RB("RB"),
   RBF("RBF"),
-  CRB("CRB"),
+  C0_RB("C0_RB"),
   npc("npc", 0),
   hi("hi", 0),
   lo("lo", 0),
   id("id", 0),
-  cc("cc", 0) {
+  cc("cc", 0),
+  intr_reg("instr_reg",1),
+  ack_port("ack_intp"){
 
   ac_mt_endian = mips_parms::AC_MATCH_ENDIAN;
   ac_tgt_endian = mips_parms::AC_PROC_ENDIAN;

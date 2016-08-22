@@ -45,7 +45,7 @@ public:
   int cur_instr_id;
 
 
-    #include "mips_isa_helper.H"
+#include "mips_isa_helper.H"
   
   //!Constructor.
   mips_isa(mips_arch& ref) : mips_arch_ref(ref) , syscall(ref) {
@@ -132,6 +132,8 @@ public:
   inline __attribute__((always_inline)) void behavior_instr_break(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
   inline __attribute__((always_inline)) void behavior_sys_call(uint8_t op, uint32_t code, uint8_t func);
   inline __attribute__((always_inline)) void behavior_eret(uint8_t op, uint32_t code, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_deret(uint8_t op, uint32_t code, uint8_t func);
+  inline __attribute__((always_inline)) void behavior_cache(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);
   inline __attribute__((always_inline)) void behavior_sync(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
   inline __attribute__((always_inline)) void behavior_teq(uint8_t op, uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shamt, uint8_t func);
   inline __attribute__((always_inline)) void behavior_ll(uint8_t op, uint8_t rs, uint8_t rt, int16_t imm);

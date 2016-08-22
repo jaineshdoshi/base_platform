@@ -5,8 +5,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 FILE(GLOB MIPS mips/*.cpp)
 FILE(GLOB BUS bus/*.cpp)
+FILE(GLOB MMU mmu/*.cpp)
 FILE(GLOB MEMORY memory/*.cpp)
-SET(SOURCE_FILES ${MIPS} ${BUS} ${MEMORY} main.cpp)
+FILE(GLOB GPTIMER gptimer/*.cpp)
+FILE(GLOB IRQMP irqmp/*.cpp)
+SET(SOURCE_FILES ${MIPS} ${BUS} ${MEMORY} ${GPTIMER} ${IRQMP} ${MMU} main.cpp)
 
 file(GLOB_RECURSE AC_HEADERS "../acinstall/include/*.H")
 file(GLOB_RECURSE SC_HEADERS "../systemcinstall/include/*.h")
@@ -20,4 +23,4 @@ endforeach()
 list(REMOVE_DUPLICATES Foo_INCLUDE_DIRS)
 
 include_directories(${Foo_INCLUDE_DIRS})
-add_executable(myrandomshit ${SOURCE_FILES} main.cpp)
+add_executable(eocs-mips-platform ${SOURCE_FILES} main.cpp)

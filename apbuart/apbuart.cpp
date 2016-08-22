@@ -133,7 +133,7 @@ ac_tlm_rsp apbuart::transport( const ac_tlm_req &request )
 {
   ac_tlm_rsp response;
 
-  cerr << "\n Accessing UART Serial : " << hex << request.addr << endl;
+  cerr << "\n Accessing UART Serial : " << hex << request.addr << "datum =" << hex << request.data << endl;
 
   switch( request.type ) {
     case WRITE:

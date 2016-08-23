@@ -1099,7 +1099,7 @@ void ac_behavior( sys_call )
 
 void ac_behavior( instr_break )
 {
-  fprintf(stderr, "instr_break behavior not implemented.\n");
+  fprintf(stderr, "End of Program.\n");
   exit(EXIT_FAILURE);
 }
 

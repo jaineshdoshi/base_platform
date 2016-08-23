@@ -27,7 +27,7 @@
 #include "apbuart.h"
 
 // Debug model for ApbUART
-#define UART_debug
+//#define UART_debug
 
 namespace grlib {
 
@@ -45,7 +45,7 @@ apbuart::apbuart(sc_module_name module_name, uint32_t socket_port): sc_module( m
   //TX Shift Register and TX FIFO empty
   StatusR      = 0x60;
 
-  ControlR     = 0x00;
+  ControlR     = 0x0  ;
   ScalerR      = 0x0;
 
   //Received data interrupt enabled
@@ -101,8 +101,8 @@ void apbuart::uart_receive()
           StatusR &= ~TRASMITTER_SHIFT_REGISTER_EMPTY;
           StatusR &= ~TRASMITTER_FIFO_EMPTY;
 
-//          if(InterruptR & RECEIVER_INTERRUPT_ENABLE)
-//            generate_interrupt();
+          if(InterruptR & RECEIVER_INTERRUPT_ENABLE)
+            generate_interrupt();
       }
    } //for
 }
@@ -113,7 +113,7 @@ ac_tlm_rsp_status apbuart::uart_transmitter()
   StatusR &= ~TRASMITTER_SHIFT_REGISTER_EMPTY;
   StatusR &= ~TRASMITTER_FIFO_EMPTY; 
   
-  if(ControlR & TRANSMITTER_ENABLE) {
+  if(InterruptR & TRANSMITTER_ENABLE) {
     string data_txd = "";
     data_txd = (char) DATA(DataR);
     plug << data_txd;
@@ -123,8 +123,8 @@ ac_tlm_rsp_status apbuart::uart_transmitter()
     StatusR |= TRASMITTER_FIFO_EMPTY;
     DataR = 0x0;
 
-//    if(InterruptR & TRANSMITTER_INTERRUPT_ENABLE)
-//       generate_interrupt();
+    if(InterruptR & TRANSMITTER_INTERRUPT_ENABLE)
+       generate_interrupt();
   }
   return SUCCESS;
 }
@@ -133,11 +133,11 @@ ac_tlm_rsp apbuart::transport( const ac_tlm_req &request )
 {
   ac_tlm_rsp response;
 
-  cerr << "\n Accessing UART Serial : " << hex << request.addr << "datum =" << hex << request.data << endl;
+  cerr << "\n Accessing UART Serial : " << hex << request.addr << ", data =" << hex << __bswap_32(request.data) << endl;
 
   switch( request.type ) {
     case WRITE:
-         response.status = uart_write(request.addr, request.data);
+         response.status = uart_write(request.addr, __bswap_32(request.data));
 #ifndef UART_debug
       dbg_printf("Serial unit write accessed at: %#x, with value = %#x \n", request.addr, request.data);
 #endif
@@ -190,63 +190,42 @@ ac_tlm_rsp_status apbuart::uart_read(const uint32_t& addr , uint32_t& data)
 
   uint32_t internal_address = addr & 0xFF;
 
-  data = DataR;
-  //!if buffer is not empty we read the next char
-  if(!buffer.empty())
-  {
-    DataR = (char) DATA(buffer.front());
-    buffer.pop(); //!Remove the readed char
-    if(ControlR & RECEIVER_INTERRUPT_ENABLE)
-    {
-      //!Generate a interruption to processor
-//          generate_interrupt();
-    }
-  }else //!buffer is empty
-  {
-    StatusR &= ~DATA_READY;
-    StatusR |= TRASMITTER_SHIFT_REGISTER_EMPTY;
-    StatusR |= TRASMITTER_FIFO_EMPTY;
-    DataR = 0x0;
+  switch(internal_address){
+   case DATA_OFFSET:     //!0x0
+      data = DataR;
+      //!if buffer is not empty we read the next char
+      if(!buffer.empty())
+      {
+        DataR = (char) DATA(buffer.front());
+        buffer.pop(); //!Remove the readed char
+            if(ControlR & RECEIVER_INTERRUPT_ENABLE)
+        {
+          //!Generate a interruption to processor
+          generate_interrupt();
+         }
+      }else //!buffer is empty
+      {
+          StatusR &= ~DATA_READY;
+          StatusR |= TRASMITTER_SHIFT_REGISTER_EMPTY;
+         StatusR |= TRASMITTER_FIFO_EMPTY;
+         DataR = 0x0;
+      }
+        return SUCCESS;
+   case STATUS_OFFSET:   //!0x28
+      data = StatusR;
+      return SUCCESS;
+   case INTERRUPT_CONTROL_OFFSET:  //!0x08
+     InterruptR = data;
+      return SUCCESS;
+    case CONTROL_OFFSET:  //!0x18
+      ControlR = data;
+      return SUCCESS;
+   case SCALER_OFFSET:   //!0xC
+      data = ScalerR;
+      return SUCCESS;
+   default:
+      return ERROR;
   }
-  return SUCCESS;
-
-
-//  switch(internal_address){
-//   case DATA_OFFSET:     //!0x0
-//      data = DataR;
-//      //!if buffer is not empty we read the next char
-//      if(!buffer.empty())
-//      {
-//        DataR = (char) DATA(buffer.front());
-//        buffer.pop(); //!Remove the readed char
-//            if(ControlR & RECEIVER_INTERRUPT_ENABLE)
-//        {
-//          //!Generate a interruption to processor
-////          generate_interrupt();
-//         }
-//      }else //!buffer is empty
-//      {
-//          StatusR &= ~DATA_READY;
-//          StatusR |= TRASMITTER_SHIFT_REGISTER_EMPTY;
-//         StatusR |= TRASMITTER_FIFO_EMPTY;
-//         DataR = 0x0;
-//      }
-//        return SUCCESS;
-//   case STATUS_OFFSET:   //!0x28
-//      data = StatusR;
-//      return SUCCESS;
-//   case INTERRUPT_CONTROL_OFFSET:  //!0x08
-//     InterruptR = data;
-//      return SUCCESS;
-//    case CONTROL_OFFSET:  //!0x18
-//      ControlR = data;
-//      return SUCCESS;
-//   case SCALER_OFFSET:   //!0xC
-//      data = ScalerR;
-//      return SUCCESS;
-//   default:
-//      return ERROR;
-//  }
 }
 
 } //namespace grlib

@@ -8,12 +8,14 @@ To compile and execute the platform:
 
 ```bash
 make
-./platform.x -- sw/hello_custom.elf```
+./platform.x -- sw/hello_custom.elf
+```
 
 
-When ``waiting for connection on port...`` appearson the current terminal, open a new terminal and type:
+* When ``waiting for connection on port...`` appearson the current terminal, open a new terminal and type:
 
 
 ```bash
-nc localhost 6000```
+nc localhost 6000
+```
 

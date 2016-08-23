@@ -27,7 +27,7 @@ all:
 	for c in $(COMPONENTS); do echo " => Making" $$c ...; \
 	    cd $$c; $(MAKE); cd ..; done
 	echo " => Making sw ..."
-	cd sw; $(MAKE)
+	cd sw && ./buildelf.sh && cd .. ;
 	echo " => Making platform ..."
 	$(MAKE) $(EXE) 
 
@@ -35,7 +35,7 @@ clean:
 	for c in $(COMPONENTS); do echo " => Cleaning" $$c ...; \
 	    cd $$c; $(MAKE) clean; cd ..; done	
 	echo " => Cleaning sw ..."
-	cd sw ; $(MAKE) clean
+	cd sw && rm hello_custom.elf && cd .. ;
 	echo " => Cleaning platform ..."
 	rm -f $(OBJS) $(EXE) *~ *.o
 

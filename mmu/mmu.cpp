@@ -84,8 +84,8 @@ ac_tlm_rsp ac_tlm_mmu::transport(const ac_tlm_req &request)
     return response;
   }
 
-//  else if(request.addr >= 0xBF000900 && request.addr <0xBF000940){
-  else if(request.addr >= 0xBF000400 && request.addr <0xBF000452){
+  else if(request.addr >= 0xBF000900 && request.addr <0xBF000952){
+//  else if(request.addr >= 0xBF000400 && request.addr <0xBF000452){
     //! Atlas Serial UART unit accessed
     response = BUS_port->transport(request);
     return response;

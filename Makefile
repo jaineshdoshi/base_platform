@@ -26,16 +26,12 @@ export CC:=g++
 all: 
 	for c in $(COMPONENTS); do echo " => Making" $$c ...; \
 	    cd $$c; $(MAKE); cd ..; done
-	echo " => Making sw ..."
-	cd sw; $(MAKE)
 	echo " => Making platform ..."
 	$(MAKE) $(EXE) 
 
 clean:
 	for c in $(COMPONENTS); do echo " => Cleaning" $$c ...; \
 	    cd $$c; $(MAKE) clean; cd ..; done	
-	echo " => Cleaning sw ..."
-	cd sw ; $(MAKE) clean
 	echo " => Cleaning platform ..."
 	rm -f $(OBJS) $(EXE) *~ *.o
 
@@ -53,7 +49,7 @@ main.o:
 #all: $(EXE)
 #------------------------------------------------------
 run: $(EXE)
-	./$(EXE) -- sw/hello.elf
+	./$(EXE) -- sw/hello_custom.elf
 #------------------------------------------------------
 #------------------------------------------------------
 distclean: clean

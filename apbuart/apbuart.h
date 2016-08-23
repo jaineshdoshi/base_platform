@@ -43,7 +43,7 @@
 #define DATA(n)                           (n & 0xFF)
 
 //UART BASE ADDRESS       0xBF000900
-//from simulation it seems to be at 0xBF000400 ?????
+//!0xBF000400 is the ROM monitor!!
 
 #define DATA_OFFSET       0x0
 #define STATUS_OFFSET     0x28

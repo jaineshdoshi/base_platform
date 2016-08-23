@@ -10,7 +10,9 @@ To compile and execute the platform:
 make
 ./platform.x -- sw/hello_custom.elf```
 
-When the ``waiting for connection on port...`` appears, open a new terminal and type:
+
+When ``waiting for connection on port...`` appearson the current terminal, open a new terminal and type:
+
 
 ```bash
 nc localhost 6000```

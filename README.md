@@ -13,6 +13,5 @@ make
 When the ``waiting for connection on port...`` appears, open a new terminal and type:
 
 ```bash
-nc localhost 6000
-```
+nc localhost 6000```
 
